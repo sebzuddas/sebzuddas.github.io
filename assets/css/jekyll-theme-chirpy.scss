@@ -8,3 +8,20 @@
 ';
 
 /* append your custom style below */
+
+
+.project-list {
+  list-style-type: decimal;
+  padding-left: 20px;
+}
+
+.project-item a {
+  font-size: 1.5em; /* Approximate size of h2 */
+  font-weight: bold; /* h2 is usually bold */
+  text-decoration: none;
+  // color: #333; /* Adjust the color as needed */
+}
+
+.project-item a:hover {
+  text-decoration: underline;
+}

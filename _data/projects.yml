@@ -1,5 +1,27 @@
+- name: Model Predictive Control with Homeassistant
+  project_path: haos_mpc
+
+- name: Aqualunar Challenge
+  project_path: aqualunar
+  photo: /assets/img/project_images/rae_logo_white.png
+
 - name: Complex System Modelling of Alcohol-related Health Inequalities
   project_path: fct_python
 
-- name: Model Predictive Control with Homeassistant
-  project_path: haos_mpc
+- name: Rocket Landing MPC
+  project_path: ACS6116-Rocket-Landing-MPC
+
+- name: Comparing Complex System Modelling Approaches through Predator-prey Systems
+  project_path: predator-prey
+
+- name: CityZen
+  project_path: cityzen
+
+- name: BioBuild
+  project_path: eyh-biobuild
+
+- name: SupplyWay
+  project_path: supplyway
+
+- name: Burglar Alarm System
+  project_path: acs233
