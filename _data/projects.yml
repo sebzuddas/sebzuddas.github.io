@@ -1,0 +1,5 @@
+- name: Complex System Modelling of Alcohol-related Health Inequalities
+  project_path: fct_python
+
+- name: Model Predictive Control with Homeassistant
+  project_path: haos_mpc
