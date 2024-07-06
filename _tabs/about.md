@@ -4,10 +4,16 @@ icon: fas fa-info-circle
 order: 10
 ---
 
-<!-- > Add Markdown syntax content to file `_tabs/about.md`{: .filepath } and it will show up on this page.
-{: .prompt-tip } -->
 
-Hello! I’m Seb, I'm on a mission to build systems that work for humanity.
+
+
+
+
+![My Image](/assets/img/Seb_Front_Face.jpg){:width="40%" style="border-radius:5%"}
+
+# Hello! I’m Seb
+
+##  I'm on a mission to build systems that work for humanity.
 
 Having graduated with a Master’s in Systems & Control Engineering from the University of Sheffield, I’ve navigated through roles that include the development of digital twins, creating avionic systems in amateur rocketry, working with tech-centred startups, and the modelling and simulation of complex systems.
 
