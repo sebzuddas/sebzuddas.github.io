@@ -2,14 +2,12 @@
 # the default layout is 'page'
 icon: fas fa-info-circle
 order: 10
+image:
+    path: /assets/img/Seb_Front_Face.jpg
+    alt: image alternative text
 ---
 
-
-
-
-
-
-![My Image](/assets/img/Seb_Front_Face.jpg){:width="40%" style="border-radius:5%"}
+<!-- ![My Image](/assets/img/Seb_Front_Face.jpg){:width="40%" style="border-radius:5%"} -->
 
 # Hello! I’m Seb
 

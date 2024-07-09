@@ -4,8 +4,9 @@ title: short-term goals vs long-term values
 category: personal_development
 tags: goals blog 
 ---
+
 # Goals and Values
-Last Thursday I attended a talk on wicked problems at the Royal Academy of Engineering, and one thing that came up was the idea that we focus a lot on short-term goals, as opposed long-term values. 
+Last Thursday I attended a talk on wicked problems at the [Royal Academy of Engineering](https://raeng.org.uk/), and one thing that came up was the idea that we focus a lot on short-term goals, as opposed long-term values. 
 
 ### The Utility of Short-term Goals
 This got me thinking, goals are great for short term thinking. When using acronyms such as SMART, WOOP and HARD, it is possible to reduce goals down into a discrete set of tasks. To complete the larger-order goal, you complete the tasks, sometimes one by one, sometimes simultaneously. In this sense, completing a larger-order goal is akin to piecing together a puzzle. This is a very reductionist, linear way of thinking, and is effective for well-defined problems. For example, developing an aircraft communications module or building a ship. Both have clearly defined markers for delivery of the product, and can be considered very advanced puzzles. 
