@@ -26,9 +26,9 @@ The premise here is that human beings are complex-adaptive non-linear systems of
 
 First, I'll describe the process of creating a systems map with free and easily accessible resources on the Internet. You will need two tools:
 
-[Google Sheets](sheets.google.com)
+- [Google Sheets](https://sheets.google.com)
 
-[Kumu](www.kumu.io)
+- [Kumu](https://www.kumu.io)
 
 There are three key steps: 
 
@@ -84,7 +84,7 @@ We will be borrowing concepts from the following resources:
 1. [The Systems Mapping Overview](https://media2-production.mightynetworks.com/asset/36886801/System_Mapping_Overview.pdf)
 2. [Systems Mapping](https://link.springer.com/book/10.1007/978-3-031-01919-7)
 3. [The Big 5 Personality Traits](https://en.wikipedia.org/wiki/Big_Five_personality_traits)
-4. [The Seven Aspects of Human Beings](http://www.drrevelmiller.com/wp-content/uploads/2013/08/The-Life-Wheel-Article-7-13-for_printing.pdf)
+4. [The Seven Aspects of Human Beings](https://www.drrevelmiller.com/wp-content/uploads/2013/08/The-Life-Wheel-Article-7-13-for_printing.pdf)
 
 ### Your Attributes
 Let's start with attributes. Attributes in this case are based on the Big 5 (Openness, Conscientiousness, Extroversion, Agreeableness and Neuroticism). There are multiple [online tests](https://openpsychometrics.org/tests/IPIP-BFFM/) for the Big 5, and if you don't know where you lie for each attribute, now is the time to take a test (5 mins max). Create an element for each attribute, and if you want, add your score as a new column. Call element types 'Attribute' for each element. Feel free to add more attribute elements if you wish.
