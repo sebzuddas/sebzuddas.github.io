@@ -93,7 +93,7 @@ Let's start with attributes. Attributes in this case are based on the Big 5 (Ope
 
 ### Your Aspects
 
-Aspects go in the tags column for the Elements. Tags are used for analysis later on. For each element, stick to a maximum number of tags from the main categories, I've chosen 3, less than the 7 presented in [Seven Aspects of Human Beings](http://www.drrevelmiller.com/wp-content/uploads/2013/08/The-Life-Wheel-Article-7-13-for_printing.pdf). The tags must contain at least one main category, and as many subcategories as you wish so long as they are related to the main ones. The constraint there is to ensure you can have a meaningful interpretation later on.
+Aspects go in the tags column for the Elements. Tags are used for analysis later on. For each element, stick to a maximum number of tags from the main categories, I've chosen 3, less than the 7 presented in [Seven Aspects of Human Beings](https://www.drrevelmiller.com/wp-content/uploads/2013/08/The-Life-Wheel-Article-7-13-for_printing.pdf). The tags must contain at least one main category, and as many subcategories as you wish so long as they are related to the main ones. The constraint there is to ensure you can have a meaningful interpretation later on.
 
 ![The Seven Aspects of Human Beings](/assets/img/project_images/personal_map/aspects_of_humans.png)
 
@@ -205,7 +205,6 @@ Elements with a high betweenness centrality are facilitators. These are the elem
 Elements with a high eigenvector centrality can be thought of as the most influential across the map. Eigenvector centrality looks at the importance of elements, relative to all other elements. This is similar to the Pagerank algorithm, used by Google to determine what websites to show you - lots of less important websites frequently link to more important websites. This is why Wikipedia ranks so highly on so many search queries.
 
 ![Eigenvector Map](/assets/img/project_images/personal_map/eigenvector.jpeg)
-
 
 ## Leverage Points
 
