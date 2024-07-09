@@ -204,7 +204,7 @@ Elements with a high betweenness centrality are facilitators. These are the elem
 
 Elements with a high eigenvector centrality can be thought of as the most influential across the map. Eigenvector centrality looks at the importance of elements, relative to all other elements. This is similar to the Pagerank algorithm, used by Google to determine what websites to show you - lots of less important websites frequently link to more important websites. This is why Wikipedia ranks so highly on so many search queries.
 
-![Eigenvector Map](/assets/img/project_images/personal_map/eigenvector.jpeg)
+![Eigenvector Map](/assets/img/project_images/personal_map/eigenvector_centrality.jpeg)
 
 ## Leverage Points
 
