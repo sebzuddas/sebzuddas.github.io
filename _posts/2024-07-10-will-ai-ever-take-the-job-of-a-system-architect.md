@@ -5,8 +5,8 @@ description: Exploring how modern AI systems fare in the context of system archi
 toc: false
 
 image:
-    path:https://www.pexels.com/photo/green-circuit-board-343457/
-    alt: green circuit board?
+    path: https://images.pexels.com/photos/343457/pexels-photo-343457.jpeg
+    alt: Complex electrical systems have been optimised by pathfinding algorithms.
 
 categories: [Systems]
 tags: [ai, society, systems, blog]
