@@ -10,8 +10,8 @@
 - name: Rocket Landing MPC
   project_path: ACS6116-Rocket-Landing-MPC
 
-- name: Comparing Complex System Modelling Approaches through Predator-prey Systems
-  project_path: predator-prey
+#- name: Comparing Complex System Modelling Approaches through Predator-prey Systems
+#  project_path: predator-prey
 
 - name: Hardware-in-the-loop for Bi-rotor Helicopter Control
   project_path: HITL
