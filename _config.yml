@@ -218,6 +218,26 @@ exclude:
   - "*.config.js"
   - package*.json
 
+jekyll_compose:
+  default_front_matter:
+    drafts:
+      description:
+      image:
+      categories:
+      tags:
+      math: false
+      mermaid: false
+
+    posts:
+      description:
+      image:
+      categories:
+      tags:
+      math: false
+      mermaid: false
+      published: false
+      sitemap: false
+
 jekyll-archives:
   enabled: [categories, tags]
   layouts:

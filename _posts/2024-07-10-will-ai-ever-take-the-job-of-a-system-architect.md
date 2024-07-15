@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Will AI Ever Take the Job of a System Architect?
-description: Exploring how modern AI systems fare in the context of system architecture. 
+DEscription: Exploring how modern AI systems fare in the context of system architecture. 
 toc: false
 
 image:
