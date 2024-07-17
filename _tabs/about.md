@@ -7,7 +7,7 @@ image:
     alt: image alternative text
 ---
 
-<!-- ![My Image](/assets/img/Seb_Front_Face.jpg){:width="40%" style="border-radius:5%"} -->
+![My Image](/assets/img/Seb_Front_Face.jpg){:width="40%" style="border-radius:5%"}
 
 # Hello! I’m Seb
 
