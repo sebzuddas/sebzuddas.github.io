@@ -25,3 +25,25 @@
 .project-item a:hover {
   text-decoration: underline;
 }
+
+.post-tail-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.post-footer img {
+  max-width: 150px; /* Adjust the size as needed */
+  height: auto;
+  border: none;
+}
+
+.post-meta {
+  flex-grow: 1;
+}
+
+.post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
