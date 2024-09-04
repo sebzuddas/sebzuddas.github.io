@@ -1,3 +1,6 @@
+- name: Grid Control MPC
+  project_path: grid_mpc
+
 - name: Model Predictive Control with Homeassistant
   project_path: haos_mpc
 
