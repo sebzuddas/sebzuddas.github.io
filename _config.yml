@@ -231,8 +231,8 @@ jekyll_compose:
       image:
       categories:
       tags:
-      math: false
-      mermaid: false
+      math: true
+      mermaid: true
       published: false
       sitemap: false
 
