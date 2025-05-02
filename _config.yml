@@ -41,7 +41,6 @@ social:
     - https://twitter.com/sebzuddas # change to your twitter homepage
     - https://github.com/sebzuddas # change to your github homepage
     # Uncomment below to add more social links
-    # - https://www.facebook.com/username
     - https://www.linkedin.com/in/sebzuddas
 
 # Site Verification Settings
@@ -97,7 +96,6 @@ cdn:
 
 # the avatar on sidebar, support local or CORS resources
 avatar: assets/img/SZ_Logo_BW.png
-
 
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.
