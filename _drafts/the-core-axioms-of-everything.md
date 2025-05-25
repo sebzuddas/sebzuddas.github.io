@@ -11,4 +11,6 @@ mermaid: false
 ---
 
 # Specialist vs Generalist
-What gave the human species an evolutionary advantage over other creatures? There are many answers to this, one of them being adaptability. Humans have this strange ability to evolve themselves, as individuals, over their lifetime, to the environment around them. They are constantly adapting, with their brains constantly learning how to live in the world. It is part of what distinguishes human beings from AI; we have the capacity to adapt to events that are happen in real-time, despite having never experienced it before. I find this ability fascinating - we are a group of creatures constantly adapting and learning, from each other, the world around us.  
+What gave the human species an evolutionary advantage over other creatures? There are many answers to this question, one of them being adaptability. Humans have the ability to adapt themselves over their lifetime to the environment around them. They are constantly adapting, their brains learning how to live in the world. It is part of what distinguishes human beings from AI; we have the capacity to adapt to events that are happen in real-time, despite having never experienced it before. I find this ability fascinating - we are a group of creatures constantly adapting and learning, from each other, the world around us.  
+
+
