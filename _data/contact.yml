@@ -10,9 +10,10 @@
   icon: "fas fa-envelope"
   noblank: true # open link in current tab
 
-- type: rss
-  icon: "fas fa-rss"
-  noblank: true
+# no more rss feed
+# - type: rss
+# icon: "fas fa-rss"
+# noblank: false
 # Uncomment and complete the url below to enable more contact options
 #
 # - type: mastodon
@@ -20,8 +21,8 @@
 #   url:  ''                  # Fill with your Mastodon account page, rel="me" will be applied for verification
 #
 - type: linkedin
-  icon: 'fab fa-linkedin'   # icons powered by <https://fontawesome.com/>
-  url:  'https://www.linkedin.com/in/sebzuddas'                  # Fill with your Linkedin homepage
+  icon: "fab fa-linkedin" # icons powered by <https://fontawesome.com/>
+  url: "https://www.linkedin.com/in/sebzuddas" # Fill with your Linkedin homepage
 #
 # - type: stack-overflow
 #   icon: 'fab fa-stack-overflow'
