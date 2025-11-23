@@ -16,7 +16,7 @@ timezone: Europe/London
 
 title: Seb Zuddas # the main title
 
-tagline: Building systems that work for all life. # it will display as the sub-title
+tagline: Building systems that serve humanity. # it will display as the sub-title
 
 description: >- # used by seo meta and the atom feed
   A hub for the things I build and the thoughts I have.
@@ -147,7 +147,7 @@ pwa:
 paginate: 10
 
 # The base URL of your site
-baseurl: ""
+baseurl: "www.sebzuddas.com"
 
 # ------------ The following options are not recommended to be modified ------------------
 
