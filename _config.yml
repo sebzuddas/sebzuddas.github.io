@@ -18,12 +18,13 @@ title: Seb Zuddas # the main title
 
 tagline: Serving humanity through systems # it will display as the sub-title
 
-description: >- # used by seo meta and the atom feed
-  A hub for the things I build and the thoughts I have.
+description:
+  >- # used by seo meta and the atom feed. Suggested: Personal projects and writing from an independent systems engineer, covering control systems, technology, experimentation, and practical problem-solving.
+  An engineer exploring systems, control, and technology - building things, sharing lessons, and thinking aloud.
 
 # Fill in the protocol & hostname for your site.
 # e.g. 'https://username.github.io', note that it does not end with a '/'.
-url: "https://sebzuddas.github.io"
+url: "https://sebzuddas.com"
 
 github:
   username: sebzuddas # change to your github username
@@ -45,12 +46,12 @@ social:
 
 # Site Verification Settings
 webmaster_verifications:
-  google: # fill in your Google verification code
-  bing: # fill in your Bing verification code
+  google: # fill in your Google verification code https://search.google.com/search-console/welcome
+  bing: # fill in your Bing verification code https://www.bing.com/webmasters/about
   alexa: # fill in your Alexa verification code
-  yandex: # fill in your Yandex verification code
+  yandex: # fill in your Yandex verification code https://webmaster.yandex.com/welcome/
   baidu: # fill in your Baidu verification code
-  facebook: # fill in your Facebook verification code
+  facebook: # fill in your Facebook verification code Meta Business Settings → Brand Safety → Domains
 
 # ↑ --------------------------
 # The end of `jekyll-seo-tag` settings
