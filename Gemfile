@@ -8,3 +8,5 @@ group :test do
   gem "html-proofer", "~> 5.0"
   gem 'jekyll-compose', group: [:jekyll_plugins]
 end
+
+gem 'jekyll-feed'

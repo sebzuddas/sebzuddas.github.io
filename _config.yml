@@ -16,7 +16,7 @@ timezone: Europe/London
 
 title: Seb Zuddas # the main title
 
-tagline: Building systems that serve humanity. # it will display as the sub-title
+tagline: Serving humanity through systems # it will display as the sub-title
 
 description: >- # used by seo meta and the atom feed
   A hub for the things I build and the thoughts I have.
@@ -147,7 +147,7 @@ pwa:
 paginate: 10
 
 # The base URL of your site
-baseurl: "www.sebzuddas.com"
+# baseurl: "www.sebzuddas.com" #TODO: This needs to be kept as a blank for the builder to be able to access root dir when running locally
 
 # ------------ The following options are not recommended to be modified ------------------
 
@@ -244,3 +244,6 @@ jekyll-archives:
   permalinks:
     tag: /tags/:name/
     category: /categories/:name/
+
+plugins:
+  - jekyll-feed
