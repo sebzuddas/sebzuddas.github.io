@@ -1,7 +1,6 @@
 ---
 layout: compress
 ---
-
 <!doctype html>
 
 {% include origin-type.html %}
@@ -73,6 +72,13 @@ layout: compress
     {% if site.pwa.enabled %}
       {% include_cached notification.html lang=lang %}
     {% endif %}
+
+    <!--
+      {% if page.url == '/' %} put the newsletter inside this if you only want it to show at / - home
+      {% endif %}
+    -->
+    {% include newsletter.html %}
+    <script src="{{ '/assets/js/dist/newsletter.min.js' | relative_url }}"></script>
 
     <!-- JavaScripts -->
     {% include js-selector.html lang=lang %}

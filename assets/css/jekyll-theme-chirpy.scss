@@ -47,3 +47,88 @@
   flex-wrap: wrap;
   gap: 0.5rem;
 }
+
+/* === Newsletter modal overlay === */
+
+.newsletter-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 1080; /* above sidebar/topbar */
+}
+
+.newsletter-backdrop.newsletter-hidden {
+  display: none;
+}
+
+/* === Modal card === */
+
+.newsletter-modal {
+  background: var(--card-bg, #ffffff);
+  color: var(--text-color, #212529);
+  border-radius: 0.75rem;
+  padding: 1.75rem 1.5rem 1.5rem;
+  max-width: 480px;
+  width: min(90%, 480px);
+  border: 1px solid var(--card-border-color, rgba(0, 0, 0, 0.08));
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.25);
+  position: relative;
+}
+
+.newsletter-modal h2 {
+  font-size: 1.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.newsletter-modal p {
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+/* Close button */
+
+.newsletter-close {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.75rem;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* === Iframe wrapper (matches card style) === */
+
+.newsletter-iframe-wrapper {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid var(--card-border-color, rgba(0, 0, 0, 0.08));
+  background: var(--body-bg, #ffffff);
+}
+
+.newsletter-iframe-wrapper iframe {
+  display: block;
+  width: 100%;
+  height: 320px;
+  border: 0;
+}
+
+/* === Dark mode refinements === */
+
+html[data-mode='dark'] .newsletter-backdrop {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+html[data-mode='dark'] .newsletter-modal {
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.6);
+}
+
+html[data-mode='dark'] .newsletter-iframe-wrapper {
+  border-color: rgba(255, 255, 255, 0.08);
+}
