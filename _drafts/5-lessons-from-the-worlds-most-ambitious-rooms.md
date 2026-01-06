@@ -10,7 +10,7 @@ mermaid: false
 ---
 
 ## Introduction
-Throughout 2025, I had the opportunity to sit in some of the most ambitious rooms in the world. Hackathons, conferences, and mansion parties. London, Amsterdam, and San Francisco. Rooms of engineers, entrepreneurs, investors - engaged people with a drive to better the world.
+Throughout 2025, I had the opportunity to sit in some of the most ambitious rooms in the world. Hackathons, conferences, and mansion parties. London, Amsterdam, and San Francisco. Rooms of engineers, entrepreneurs, investors - visionaries with a drive to better the world.
 
 It was the people who impressed me the most in these rooms. The quality of mindset and behaviour of individuals stood out more than anything material. So, on reflection, what did I learn? What characterises people who are proactively working towards creating change? What behaviours do they exhibit? And most importantly, how do people interact in these environments? Here are 5 key lessons I took from being in some of the world’s most ambitious rooms.
 

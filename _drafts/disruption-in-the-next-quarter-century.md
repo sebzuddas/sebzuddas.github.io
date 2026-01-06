@@ -51,3 +51,5 @@ Ultimately what we want to understand is - how do we want these *groups* to beha
 ## The Disruptions
 
 ## The Opportunities
+
+Pure software offered the opportunity to automate things that needed to be the same every time. stochastic technologies, LLMs offer the opportunity to automate things that should be genuinely unique every time. 

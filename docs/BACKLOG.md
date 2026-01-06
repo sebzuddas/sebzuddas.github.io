@@ -91,9 +91,9 @@ Personal website and blog built on Jekyll + Chirpy theme. Focus: systems thinkin
 - [~] ~~Sidebar slide-in animation~~ (removed - better stability)
 
 **Phase 3 - Optional Polish:**
-- [ ] Post reading progress indicator
-- [ ] Scroll-triggered section animations (intersection observer)
-- [ ] Dark/light mode transition animation
+- [x] Post reading progress indicator
+- [x] Scroll-triggered section animations (intersection observer)
+- [x] Dark/light mode transition animation
 
 **Documentation:**
 - Technical guide: `docs/ANIMATION_IMPLEMENTATION.md`

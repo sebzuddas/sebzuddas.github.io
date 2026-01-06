@@ -148,7 +148,7 @@ pwa:
 paginate: 10
 
 # The base URL of your site
-# baseurl: "www.sebzuddas.com" #TODO: This needs to be kept as a blank for the builder to be able to access root dir when running locally
+baseurl: "" # Empty for root domain (sebzuddas.com)
 
 # ------------ The following options are not recommended to be modified ------------------
 

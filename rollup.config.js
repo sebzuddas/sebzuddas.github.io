@@ -65,6 +65,7 @@ export default [
   build('page'),
   build('post'),
   build('misc'),
+  build('newsletter'),
   build('app', { src: SRC_PWA }),
   build('sw', {
     src: SRC_PWA,

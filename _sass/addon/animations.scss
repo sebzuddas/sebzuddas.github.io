@@ -73,6 +73,16 @@
   }
 }
 
+/* Phase 3: Scroll-triggered fade (smooth, no vertical movement) */
+@keyframes scroll-fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 /* ---------- Animation Utility Classes ---------- */
 
 /* Smooth transitions for interactive elements */
@@ -270,6 +280,138 @@
   }
 }
 
+/* ---------- Phase 3: Reading Progress Indicator ---------- */
+
+/* Particle animation for progress bar */
+@keyframes particles-rise {
+  0% {
+    opacity: 0.8;
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-15px) scale(0.3);
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.15);
+  }
+}
+
+/* Reading progress bar container */
+#reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+  z-index: 9999;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* Progress bar fill - Lightsaber style with intense glow */
+.reading-progress-fill {
+  position: relative;
+  height: 100%;
+  background: linear-gradient(90deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgb(138, 180, 248) 50%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+  /* Intense multi-layer glow */
+  box-shadow:
+    /* Core white glow */
+    0 0 4px rgba(255, 255, 255, 0.9),
+    0 0 8px rgba(255, 255, 255, 0.7),
+    /* Inner blue glow */
+    0 0 12px rgba(138, 180, 248, 0.9),
+    0 0 16px rgba(138, 180, 248, 0.8),
+    /* Mid blue glow */
+    0 0 24px rgba(138, 180, 248, 0.6),
+    0 0 32px rgba(138, 180, 248, 0.5),
+    /* Outer dramatic glow */
+    0 0 48px rgba(138, 180, 248, 0.4),
+    0 0 64px rgba(138, 180, 248, 0.2);
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 0.1s linear;
+  will-change: transform;
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* Particle effect using pseudo-elements */
+.reading-progress-fill::before,
+.reading-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Particle layer 1 - rising sparkles */
+.reading-progress-fill::before {
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.8) 1px, transparent 1px),
+    radial-gradient(circle, rgba(138, 180, 248, 0.6) 1px, transparent 1px);
+  background-size: 40px 20px, 60px 20px;
+  background-position: 0 0, 20px 10px;
+  animation: particles-rise 3s ease-out infinite;
+}
+
+/* Particle layer 2 - delayed rising sparkles for variation */
+.reading-progress-fill::after {
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.6) 0.8px, transparent 0.8px),
+    radial-gradient(circle, rgba(138, 180, 248, 0.5) 1.2px, transparent 1.2px);
+  background-size: 50px 20px, 70px 20px;
+  background-position: 10px 0, 30px 10px;
+  animation: particles-rise 3.5s ease-out infinite;
+  animation-delay: 0.5s;
+}
+
+/* ---------- Phase 3: Scroll-Triggered Animations ---------- */
+
+/* Elements that will animate on scroll - start invisible */
+/* Only targeting h2 for section-based animation (smoother experience) */
+.content h2:not(.scroll-fade-in) {
+  opacity: 0;
+}
+
+/* Scroll-triggered fade for content sections (smooth, no translation) */
+.scroll-fade-in {
+  animation: scroll-fade-in 800ms var(--anim-easing-ease-out) forwards !important;
+  opacity: 1 !important;
+}
+
+/* ---------- Phase 3: Dark/Light Mode Transition ---------- */
+
+/* Smooth color transitions when switching modes */
+html {
+  transition: background-color 350ms ease-in-out, color 350ms ease-in-out;
+}
+
+body {
+  transition: background-color 350ms ease-in-out, color 350ms ease-in-out;
+}
+
+/* Transition theme color variables smoothly */
+:root {
+  transition: background-color 350ms ease-in-out;
+}
+
 /* ---------- Smooth Scroll Behavior ---------- */
 
 html {
@@ -293,6 +435,18 @@ html {
   .post-preview:hover,
   #back-to-top:hover {
     transition: background-color 0.01ms, box-shadow 0.01ms;
+  }
+
+  /* Phase 3: Hide reading progress completely */
+  #reading-progress {
+    display: none !important;
+  }
+
+  /* Phase 3: Disable scroll animations */
+  .scroll-fade-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
 
@@ -341,5 +495,17 @@ html {
     box-shadow: 0 0 6px rgba(138, 180, 248, 0.25),
                 0 0 12px rgba(138, 180, 248, 0.12),
                 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Phase 3: Disable reading progress on mobile */
+  #reading-progress {
+    display: none;
+  }
+
+  /* Phase 3: Disable scroll animations on mobile */
+  .scroll-fade-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 }

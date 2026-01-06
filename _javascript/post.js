@@ -5,7 +5,9 @@ import {
   initLocaleDatetime,
   initClipboard,
   toc,
-  initEntranceAnimations
+  initEntranceAnimations,
+  initReadingProgress,
+  initScrollAnimations
 } from './modules/plugins';
 
 loadImg();
@@ -16,4 +18,6 @@ initLocaleDatetime();
 initClipboard();
 initTopbar();
 initEntranceAnimations();
+initReadingProgress();
+initScrollAnimations();
 basic();

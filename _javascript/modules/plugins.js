@@ -5,3 +5,5 @@ export { imgPopup } from './components/img-popup';
 export { initLocaleDatetime } from './components/locale-datetime';
 export { toc } from './components/toc';
 export { initEntranceAnimations } from './components/entrance-animations';
+export { initReadingProgress } from './components/reading-progress';
+export { initScrollAnimations } from './components/scroll-animations';
