@@ -14,7 +14,7 @@ Throughout 2025, I had the opportunity to sit in some of the most ambitious room
 
 It was the people who impressed me the most in these rooms. The quality of mindset and behaviour of individuals stood out more than anything material. So, on reflection, what did I learn? What characterises people who are proactively working towards creating change? What behaviours do they exhibit? And most importantly, how do people interact in these environments? Here are 5 key lessons I took from being in some of the world’s most ambitious rooms.
 
-## 1. Storytelling always comes first.
+## 1. Storytelling Always Comes First
 
 > “The universe is made of stories, not of atoms.” Muriel Rukeyser
 
@@ -40,19 +40,19 @@ Ask yourself this - would you follow someone who didn’t believe in the story t
 
 ### Actionables
 
-#### 1. How to tell better stories to others
+#### 1. How to Tell Better Stories to Others
 
 Telling better stories to others ultimately comes down to knowing your audience and being flexible enough to adjust (sometimes in real-time) your story to keep them engaged. There are certain approaches you can take to telling better stories, such as being aware of story archetypes or the pyramid principle.
 
 Keeping things simple, slow and clear ensures your audience can follow the story at a manageable pace. Often, people feel they have so much to contextualise that the core story is obfuscated by the context. When people feel they have a lot to say, they usually speak too fast, and the audience gets lost. Boil it down to the essentials, and let people ask questions after. As with anything, good storytelling requires practice, reflection and time.
 
-#### 2. How to tell better stories to yourself
+#### 2. How to tell Better Stories to Yourself
 
 In the same way that telling better stories to others comes down to knowing your audience, altering your own self-narrative comes down to, and helps contribute towards understanding yourself. Much has been said in modern psychology about developing a healthy self-story and how this impacts your life downstream. Rewriting your own self-story helps heal trauma in the most extreme cases.
 
 Take ownership of your own story, consider and challenge the narratives you tell yourself, and write a compelling self-story. Doing this will also help improve your own self-awareness and help you communicate your own story with conviction. Andrew Huberman has some great resources on self-narrative. Be radically honest with yourself about which story archetypes you are prone to telling yourself. Practice telling your own self-story through a compelling story archetype and reflect on how it feels.
 
-## 2. Media has hype, individuals have convictions.
+## 2. Media has Hype, Individuals Have Convictions.
 
 > In the midst of hype, reflect deeply on your values.
 
@@ -64,7 +64,7 @@ People in the world’s most ambitious rooms have well-developed opinions, thoug
 
 ### Actionables:
 
-#### 1. Develop your filter, own your conviction
+#### 1. Develop Your Filter, Own Your Conviction
 
 Developing your filter comes down to a combination of self-awareness and knowledge. What are your values? What matters to you and why? What can you do about it now? What could you do about it in the future? How might you get to the point of being able to be proactive about what matters to you? You are the expert in your own lived experience.
 
@@ -72,7 +72,7 @@ Use your lived experience to determine what you have conviction in. This becomes
 
 You need a strong and reliable filter to find the signal in noise. Aim to get to a point where you can be in a room full of people hyping about one topic, and you can work on that thing in which you have absolute conviction. The best rooms are not the ones in which everyone is excited about the same thing, but where everyone truly believes in their own idea. Lead in your own ideas, and others will follow.
 
-## 3. Location is a proxy for luck
+## 3. Location is a Proxy for Luck
 
 > 'Lady luck favours those who try' - being in the right place makes the right time come sooner.
 
@@ -84,13 +84,13 @@ Since the dawn of time, people have gravitated toward those who are similar to t
 
 ### Actionables
 
-#### 1. Find and commit to a place
+#### 1. Find and Commit to a Place
 
 The best possible place to be includes a strong, encouraging, in-person community that convenes in locations that are based on your interests. If your thing is AI, then Silicon Valley is a no-brainer. If your thing is robotics, then you might choose Zurich. If your thing is fintech, then you might choose London or New York. Go where people are pursuing the things you also want to pursue.
 
 Finding the right place can be difficult, however. You may assume based on everything you know that Place A is the best for finding the right people. You go there, and you realise it’s not what you expected. This is also part of the process of finding the right place. Give yourself a minimum time commitment, a year, for example, and re-evaluate.
 
-#### 2. Find and form communities
+#### 2. Find and Form Communities
 
 Once you’ve found your way to the place, place yourself as close to the centre of the ‘pinball machine of people’ that you can. Find the events that are being put on, go to the clubs they frequent, or learn where they learn. Engage, be present, put yourself out there. This way, you increase your chance of lucky encounters occurring.
 
@@ -98,23 +98,23 @@ If these things don’t exist where you currently are, challenge yourself as muc
 
 Finally, form your own community centred around the specific topic you’re interested in. You then get to become ‘the exciting events host’ rather than attending them.
 
-## 4. Learning to have conversations with the right people can teach you more than a course.
+## 4. Learning to Have Conversations With the Right People Can Teach you More Than a Course.
 
 > Deep listening unlocks more than doors.
 
 Deep listening is a practice in which you read more than just the words the other person is telling you. If you see listening as a social nicety or as a task, you should re-evaluate. People who have convictions can teach you a lot, as mentioned above. However, training your mind to dig deeper than what someone presents gives you the ability to turn each conversation into a learning opportunity.
 
-### There are three learning opportunities per interaction.
+### There are Three Learning Opportunities per Interaction.
 
-#### Learning from conversations - the surface level
+#### Learning from Conversations - The Surface Level
 
 The first opportunity lies in the surface level of what the other person is saying. Take note of how they are presenting themselves, what narrative they are conveying. This level gives you insight on how to dig deeper into their own interests, as well as how you might communicate your interests to them. For the loud and outgoing types, you might challenge them through good questioning and spelling out your own convictions. For the quiet and timid, you might spend some more time listening for that thing that gets them going.
 
-#### Learning from conversations - the action-behaviour level
+#### Learning from Conversations - The Action-behaviour Level
 
 The second lies in their actions & behaviours. How are they carrying themselves in your conversation? How are they carrying themselves in conversations with others? If the other person is demonstrating closed body language, they are withholding something of themselves (sometimes for good reason). Learning to adapt your conversation based on body language is somewhat of an art form, and something best improved through practice.
 
-#### Learning from conversations - the conviction level
+#### Learning from Conversations - The Conviction Level
 
 The third lies in their conviction. A person’s convictions, well-formed or not, can be extremely revealing. There is the surface-level content, which is more than likely something you know far less about than they do. This is a direct and obvious learning opportunity, so tap into your curiosity and try to understand their conviction from their perspective. These types of conversations can open your mind to opportunities and ideas that you previously may not have even considered. It is always worth trying to get to learn about someone’s convictions. The deeper learning opportunity here is how the other person communicates the conviction - and this is where you can begin to understand how well-formed it is. Do they have a deep understanding of the topic, or are they just speaking convincingly? Again, this can be hard to decipher, but learning to tune the BS radar is a skill.
 
@@ -124,7 +124,7 @@ Learning about people in this way gives you an understanding of the individuals 
 
 ### Actionables
 
-#### 1. Tap into your curiosity
+#### 1. Tap into Your Curiosity
 
 Make it your mission to find what it is that makes a person tick, and then get them to delve deep into that topic, and try to follow. Ask clarifying questions, try to understand them, their perspective, and why it drives them.
 
@@ -132,13 +132,13 @@ Why did they follow the hard path? Why did they go against the grain? How did th
 
 People often focus on how they come across to others when in conversation. This behaviour is completely natural, especially when you’re interacting with a group of people you don’t know. While most people fall into this trap, you can tap into your curiosity and really get to know someone.
 
-#### 2. Be authentic
+#### 2. Be Authentic
 
 Authenticity in this context means sharing your honest thoughts on the matter at hand. When sharing a thought that is not well formed, then share it with a degree of openness to being wrong - let go of your ego.
 
 Similarly, if you’re not convinced by what someone is saying after they have explained it fully, then don’t be. It doesn’t mean to become confrontational, but rather having a strong enough sense of self that you’re able to listen to an opinion, try to understand it fully, and not take it as ground truth. It is then your judgment to make as to whether or not to challenge them.
 
-## 5. Depth over breadth when networking.
+## 5. Depth Over Breadth When Networking.
 
 > In the long term, high-quality, slow-growth beats low-quality, high-growth.
 
@@ -146,17 +146,17 @@ People remember you not for how cool or important you came across, but how you m
 
 ### Actionables
 
-#### 1. Focus on people
+#### 1. Focus on People
 
 Anyone can become a people person. Vanessa Van Edwards has some great advice on becoming a people person. Ditch the ‘introvert/extrovert’ framework - you will find groups who energise you and others who drain you. You have the agency to choose who you invest your time with. You are the average of the 5 people you spend the most time with. The point is to go out and find these people, because it’s the single best time investment you can make.
 
 Your network is unique, and will not be the same as anyone else’s. Your network is also fluid and is subject to constant change. On some level, you need to be comfortable with this level of uncertainty and change.
 
-#### 2. Facilitate connections
+#### 2. Facilitate Connections
 
 From a pure network science perspective, you’re aiming for a dense social network because a dense network transmits information effectively and is more resilient. That doesn’t necessarily mean a few people, but rather a well-connected network. Check this post to understand the difference between dense and sparse networks. How do you create a dense network? By fostering connections between people. Find ways to get people together - host events, dinners, do things that bring people together.
 
-## Bonus - How do I get into the world’s most ambitious rooms?
+## Bonus - How do I get into The World’s Most Ambitious Rooms?
 
 The running theme in this post is people who are solving problems. You can pay to get into these rooms, but failing at the interpersonal component will make sure you will not be coming back. There are also many rooms in the world full of people complaining about problems, but not doing much to solve them. I know which rooms I’d rather be in.
 
