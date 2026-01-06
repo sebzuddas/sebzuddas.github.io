@@ -282,6 +282,10 @@
 
 /* ---------- Phase 3: Reading Progress Indicator ---------- */
 
+/* Color constants for progress states */
+$progress-color-active: rgb(138, 180, 248);    /* Blue (reading) */
+$progress-color-complete: rgb(100, 220, 255);  /* Cyan (completed) */
+
 /* Particle animation for progress bar */
 @keyframes particles-rise {
   0% {
@@ -306,6 +310,48 @@
   }
 }
 
+/* Shimmer travel - creates lifelike energy flow across the progress bar */
+@keyframes shimmer-travel {
+  0% {
+    background-position: -200px 0, 0 0;
+  }
+  100% {
+    background-position: calc(100vw + 200px) 0, 0 0;
+  }
+}
+
+/* Completion pulse - breathing effect for finished reading */
+@keyframes completion-pulse {
+  0%, 100% {
+    filter: brightness(1) saturate(1);
+  }
+  50% {
+    filter: brightness(1.2) saturate(1.3);
+  }
+}
+
+/* Particle burst - one-time celebration effect */
+@keyframes particle-burst {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.3);
+  }
+}
+
+/* Shimmer flash - one-time fast sweep */
+@keyframes shimmer-flash {
+  0% {
+    background-position: -200px 0, 0 0;
+  }
+  100% {
+    background-position: calc(100vw + 200px) 0, 0 0;
+  }
+}
+
 /* Reading progress bar container */
 #reading-progress {
   position: fixed;
@@ -319,15 +365,29 @@
   overflow: visible;
 }
 
-/* Progress bar fill - Lightsaber style with intense glow */
+/* Progress bar fill - Lightsaber style with intense glow and shimmer */
 .reading-progress-fill {
   position: relative;
   height: 100%;
-  background: linear-gradient(90deg,
-    rgba(255, 255, 255, 0.9) 0%,
-    rgb(138, 180, 248) 50%,
-    rgba(255, 255, 255, 0.9) 100%
-  );
+  /* Layered background: base gradient + traveling shimmer */
+  background:
+    /* Traveling shimmer overlay - creates lifelike movement */
+    linear-gradient(90deg,
+      transparent 0%,
+      transparent 30%,
+      rgba(255, 255, 255, 0.6) 50%,
+      transparent 70%,
+      transparent 100%
+    ),
+    /* Base lightsaber gradient */
+    linear-gradient(90deg,
+      rgba(255, 255, 255, 0.9) 0%,
+      rgb(138, 180, 248) 50%,
+      rgba(255, 255, 255, 0.9) 100%
+    );
+  background-size: 200px 100%, 100% 100%;
+  background-position: -200px 0, 0 0;
+  background-repeat: no-repeat;
   /* Intense multi-layer glow */
   box-shadow:
     /* Core white glow */
@@ -346,7 +406,8 @@
   transform: scaleX(0);
   transition: transform 0.1s linear;
   will-change: transform;
-  animation: glow-pulse 2s ease-in-out infinite;
+  /* Combine glow pulse with shimmer travel */
+  animation: glow-pulse 2s ease-in-out infinite, shimmer-travel 3.5s linear infinite;
 }
 
 /* Particle effect using pseudo-elements */
@@ -380,6 +441,95 @@
   background-position: 10px 0, 30px 10px;
   animation: particles-rise 3.5s ease-out infinite;
   animation-delay: 0.5s;
+}
+
+/* Completion state - cyan with enhanced glow and breathing pulse */
+.reading-progress-fill[data-completed="true"] {
+  background:
+    /* Traveling shimmer overlay */
+    linear-gradient(90deg,
+      transparent 0%,
+      transparent 30%,
+      rgba(255, 255, 255, 0.6) 50%,
+      transparent 70%,
+      transparent 100%
+    ),
+    /* Cyan completion gradient */
+    linear-gradient(90deg,
+      rgba(255, 255, 255, 0.9) 0%,
+      rgb(100, 220, 255) 50%,
+      rgba(255, 255, 255, 0.9) 100%
+    );
+  background-size: 200px 100%, 100% 100%;
+  background-position: -200px 0, 0 0;
+  background-repeat: no-repeat;
+
+  /* Enhanced cyan glow (4x intensity) */
+  box-shadow:
+    /* Core white glow */
+    0 0 4px rgba(255, 255, 255, 0.9),
+    0 0 8px rgba(255, 255, 255, 0.7),
+    /* Inner cyan glow */
+    0 0 12px rgba(100, 220, 255, 0.9),
+    0 0 16px rgba(100, 220, 255, 0.8),
+    /* Mid cyan glow */
+    0 0 24px rgba(100, 220, 255, 0.6),
+    0 0 32px rgba(100, 220, 255, 0.5),
+    /* Outer dramatic glow */
+    0 0 48px rgba(100, 220, 255, 0.4),
+    0 0 64px rgba(100, 220, 255, 0.2),
+    /* Additional outer layers for 4x effect */
+    0 0 80px rgba(100, 220, 255, 0.15),
+    0 0 96px rgba(100, 220, 255, 0.1);
+
+  /* Continuous breathing pulse + shimmer */
+  animation: completion-pulse 3s ease-in-out infinite, shimmer-travel 3.5s linear infinite;
+}
+
+/* One-time particle burst effect when completion triggered */
+.reading-progress-fill.particle-burst::before,
+.reading-progress-fill.particle-burst::after {
+  animation: particle-burst 2s ease-out;
+}
+
+/* One-time shimmer flash effect when completion triggered */
+.reading-progress-fill.shimmer-flash {
+  animation: shimmer-flash 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+/* Accessibility: Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .reading-progress-fill {
+    animation: none !important;
+  }
+  .reading-progress-fill::before,
+  .reading-progress-fill::after {
+    animation: none !important;
+  }
+
+  /* Completion state - static cyan with moderate glow (no animations) */
+  .reading-progress-fill[data-completed="true"] {
+    animation: none !important;
+
+    /* Reduced glow intensity (2.5x instead of 4x) */
+    box-shadow:
+      0 0 4px rgba(255, 255, 255, 0.9),
+      0 0 8px rgba(255, 255, 255, 0.7),
+      0 0 12px rgba(100, 220, 255, 0.9),
+      0 0 16px rgba(100, 220, 255, 0.8),
+      0 0 24px rgba(100, 220, 255, 0.6),
+      0 0 32px rgba(100, 220, 255, 0.5);
+  }
+
+  /* Disable one-time animations */
+  .reading-progress-fill.particle-burst::before,
+  .reading-progress-fill.particle-burst::after {
+    animation: none !important;
+  }
+
+  .reading-progress-fill.shimmer-flash {
+    animation: none !important;
+  }
 }
 
 /* ---------- Phase 3: Scroll-Triggered Animations ---------- */

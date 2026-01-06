@@ -52,4 +52,8 @@ Ultimately what we want to understand is - how do we want these *groups* to beha
 
 ## The Opportunities
 
-Pure software offered the opportunity to automate things that needed to be the same every time. stochastic technologies, LLMs offer the opportunity to automate things that should be genuinely unique every time. 
+The industrial revolution offered the opportunity to automate physical labour. Tasks that required repeated, physical motion could be replaced by machines who did not get tired. However, any situation that required some level of adaptation could not be automated. 
+
+The computer revolution offered the opportunity to automate
+
+Pure software offered the opportunity to automate things that needed to be the same every time. stochastic technologies, LLMs offer the opportunity to automate things that should be genuinely unique every time they are generated. 

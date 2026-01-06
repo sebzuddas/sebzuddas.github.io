@@ -74,7 +74,7 @@ You need a strong and reliable filter to find the signal in noise. Aim to get to
 
 ## 3. Location is a proxy for luck
 
-Lady luck favours those who try - being in the right place makes the right time come sooner.
+> 'Lady luck favours those who try' - being in the right place makes the right time come sooner.
 
 So-called “lucky” encounters arise from being in the right place at the right time. Many who attribute success to luck forget the role of choosing to be in a location where lucky encounters are more likely. The right place is often to do with being around the right people. So who are the right people for you? Again, this comes down to understanding yourself and what you value.
 
