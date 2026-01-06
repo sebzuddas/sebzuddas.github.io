@@ -61,6 +61,18 @@
   }
 }
 
+/* Phase 2: Fade up animation for post cards and content sections */
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ---------- Animation Utility Classes ---------- */
 
 /* Smooth transitions for interactive elements */
@@ -86,6 +98,51 @@
   transition: opacity var(--anim-duration-normal) var(--anim-easing-smooth);
 }
 
+/* Phase 2: Stagger delay utilities for entrance animations */
+.animate-fade-up {
+  animation: fade-up 400ms var(--anim-easing-ease-out) backwards;
+}
+
+.animate-delay-1 {
+  animation-delay: 150ms;
+}
+
+.animate-delay-2 {
+  animation-delay: 300ms;
+}
+
+.animate-delay-3 {
+  animation-delay: 450ms;
+}
+
+.animate-delay-4 {
+  animation-delay: 600ms;
+}
+
+.animate-delay-5 {
+  animation-delay: 750ms;
+}
+
+.animate-delay-6 {
+  animation-delay: 900ms;
+}
+
+.animate-delay-7 {
+  animation-delay: 1050ms;
+}
+
+.animate-delay-8 {
+  animation-delay: 1200ms;
+}
+
+.animate-delay-9 {
+  animation-delay: 1350ms;
+}
+
+.animate-delay-10 {
+  animation-delay: 1500ms;
+}
+
 /* ---------- Component-Specific Animations ---------- */
 
 /* Enhanced sidebar navigation hover states */
@@ -98,9 +155,9 @@
 
     &:hover {
       transform: scale(1.02);
-      box-shadow: 0 0 12px rgba(138, 180, 248, 0.4),
-                  0 0 24px rgba(138, 180, 248, 0.2),
-                  0 2px 8px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 0 8px rgba(138, 180, 248, 0.3),
+                  0 0 16px rgba(138, 180, 248, 0.15),
+                  0 2px 6px rgba(0, 0, 0, 0.12);
     }
 
     /* Icon micro-animation on hover */
@@ -127,8 +184,8 @@
 
   &:hover {
     transform: translateY(-8px) !important;
-    box-shadow: 0 0 16px rgba(138, 180, 248, 0.5),
-                0 0 32px rgba(138, 180, 248, 0.3),
+    box-shadow: 0 0 8px rgba(138, 180, 248, 0.3),
+                0 0 16px rgba(138, 180, 248, 0.15),
                 0 8px 16px rgba(0, 0, 0, 0.25);
   }
 
@@ -156,8 +213,8 @@
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 0 20px rgba(138, 180, 248, 0.3),
-                0 0 40px rgba(138, 180, 248, 0.15),
+    box-shadow: 0 0 8px rgba(138, 180, 248, 0.3),
+                0 0 16px rgba(138, 180, 248, 0.15),
                 0 12px 24px rgba(0, 0, 0, 0.18);
   }
 }
@@ -190,6 +247,26 @@
   &:hover {
     transform: rotate(90deg);
     color: var(--link-color);
+  }
+}
+
+/* Phase 2: Post content section fade-in */
+.post-content-section {
+  animation: fade-up 500ms var(--anim-easing-ease-out) backwards;
+}
+
+/* Phase 2: Enhanced tag hover states with spring effect */
+.tag,
+.post-tag {
+  transition: transform var(--anim-duration-normal) var(--anim-easing-spring),
+    box-shadow var(--anim-duration-normal) var(--anim-easing-smooth),
+    background-color var(--anim-duration-normal) var(--anim-easing-smooth);
+
+  &:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0 8px rgba(138, 180, 248, 0.3),
+                0 0 16px rgba(138, 180, 248, 0.15),
+                0 2px 6px rgba(0, 0, 0, 0.12);
   }
 }
 
@@ -242,5 +319,27 @@ html {
   .newsletter-modal {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
+  }
+
+  /* Phase 2: Disable entrance animations on mobile */
+  .animate-fade-up,
+  .post-content-section {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Simplified tag hover on mobile */
+  .tag:hover,
+  .post-tag:hover {
+    transform: scale(1.02);
+  }
+
+  /* Simplified Recently Updated hover on mobile */
+  #access-lastmod .content a:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 6px rgba(138, 180, 248, 0.25),
+                0 0 12px rgba(138, 180, 248, 0.12),
+                0 2px 4px rgba(0, 0, 0, 0.1);
   }
 }

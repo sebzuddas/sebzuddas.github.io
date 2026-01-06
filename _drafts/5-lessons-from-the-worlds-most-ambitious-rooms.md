@@ -2,7 +2,7 @@
 layout: post
 title: 5 lessons from the world's most ambitious rooms
 description: In 2025, I took opportunities to be in some of the world's most ambitous rooms. Here are 5 things I learnt. 
-image: https://media1.tenor.com/m/lD-OoDODiQoAAAAC/futuristic-city.gif 
+image: https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3MmxhOTl4Z2xjbm5mY3pwdWFobm1vaXdpdnM1djVqc3h5cGZsdWk2bCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/F4nBKBWxcWzcdMJX2W/giphy.gif
 categories: []
 tags: [personal_development]
 math: false

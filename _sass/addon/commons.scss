@@ -218,13 +218,28 @@ i {
 
 #access-lastmod {
   a {
-    &:hover {
-      @extend %link-hover;
-    }
-
-    @extend %no-bottom-border;
-
+    /* Pill/badge styling to match trending tags */
+    display: inline-block;
+    border-radius: 0.7em;
+    padding: 4px 10px 5px;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid var(--tag-border);
+    box-shadow: 0 0 3px 0 var(--tag-shadow);
+    text-decoration: none;
     color: inherit;
+
+    /* Animations already defined in animations.scss */
+    transition: transform var(--anim-duration-normal) var(--anim-easing-spring),
+      box-shadow var(--anim-duration-normal) var(--anim-easing-smooth),
+      background-color var(--anim-duration-normal) var(--anim-easing-smooth);
+
+    &:hover {
+      transform: scale(1.06);
+      box-shadow: 0 0 8px rgba(138, 180, 248, 0.3),
+                  0 0 16px rgba(138, 180, 248, 0.15),
+                  0 2px 6px rgba(0, 0, 0, 0.12);
+    }
   }
 }
 
