@@ -30,7 +30,7 @@
         {% assign index = item | split: '::' | last | plus: 0 %}
         {% assign post = site.posts[index] %}
         {% assign url = post.url | relative_url %}
-        <li class="text-truncate lh-lg">
+        <li class="lh-lg">
           <a href="{{ url }}">{{ post.title }}</a>
         </li>
       {% endfor %}

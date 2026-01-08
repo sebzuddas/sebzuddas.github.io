@@ -87,6 +87,7 @@ blockquote {
   background: rgba(138, 180, 248, 0.05);
   border-radius: 0 4px 4px 0;
   font-style: italic;
+
   /* Subtle glow effect on border */
   box-shadow: -2px 0 8px rgba(138, 180, 248, 0.1);
 
@@ -774,6 +775,11 @@ $btn-mb: 0.5rem;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+
+    /* Add glow effect to make it stand out */
+    text-shadow: 0 0 8px rgba(138, 180, 248, 0.4),
+                 0 0 16px rgba(138, 180, 248, 0.2),
+                 0 0 24px rgba(138, 180, 248, 0.1);
   }
 
   ul {

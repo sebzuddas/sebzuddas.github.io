@@ -9,7 +9,7 @@ description: A guide to create the ultimate tool for self reflection
 toc: false
 
 categories: [personal_development]
-tags: [goals, personal_development, blog, systems]
+tags: [goals, personal_development, systems]
 
 date: 2024-01-01 13:00 
 ---
