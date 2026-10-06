@@ -46,4 +46,10 @@
 
     {{ site.data.locales[include.lang].meta | replace: ':PLATFORM', _platform | replace: ':THEME', _theme }}
   </p>
+
+  <p>
+    <a href="{{ '/privacy/' | relative_url }}">Privacy Policy</a>
+    &middot;
+    <a href="{{ '/terms/' | relative_url }}">Terms of Service</a>
+  </p>
 </footer>

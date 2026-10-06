@@ -15,9 +15,11 @@ https://www.gov.uk/government/news/emerging-disruptive-technologies-nato-competi
 # What do you think are the opportunities and risks of emerging and disruptive technologies?
 
 ## The Techonolgies
-There is a lot of hype around Artificial Intelligence, the term itself is vague since it encompasses many subdomains. Autopilot systems in aircraft have existed for many years, yet many don't consider autopilots as AI. And yet, many wouldn't feel safe flying if ChatGPT was known to be controlling the aircraft. Modern LLMs can be thought of as extremely high-reliability stochastic processes; when you input the same question twice, you get two convincing, but different answers. Aircraft autopilot systems are the deterministic equivalent; for two of the same set of input signals, the autopilot will give the same outputs for both. Autopilots are virtual pilots that have undergone strict tests to ensure robustness under critical conditions, such that the passengers and crew will land safely.
+There is a lot of hype around Artificial Intelligence, the term itself is vague since it encompasses many subdomains. Autopilot systems in aircraft have existed for many years, yet many don't consider autopilots as AI in the same way ChatGPT is considered AI. And yet, many wouldn't feel safe flying if ChatGPT was known to be controlling the aircraft. 
 
-An LLM's strength is in interpreting written language and predicting what word should come next in a stream of text. An autopilot's strength is ensuring that an aircraft remains stable in the face of turbulence. This essay forecasts a world in which these two types of systems (stochastic and deterministic) combine at scale. I examine what happens as a result of those combinations as singular entities, and forecast emergent behaviours of combinations of these stochastic-deterministic entities. 
+Modern LLMs can be thought of as extremely high-reliability stochastic processes; when you input the same question twice, you get two convincing, but different answers. Aircraft autopilot systems are deterministic; for two of the same set of input signals, the autopilot will give the same output twice. Autopilots are virtual pilots that have undergone strict tests to ensure robustness under critical conditions, such that the passengers and crew will land safely.
+
+An LLM's strength is in interpreting written language and predicting what word should come next in a stream of text. An autopilot's strength is ensuring that an aircraft remains stable in the face of turbulence. This essay forecasts a world in which these two types of systems (stochastic and deterministic) combine at scale and in multiple forms. I examine what happens as a result of those combinations as singular entities, and forecast emergent behaviours of combinations of these stochastic-deterministic entities. 
 
 ### The Combination of a Stochastic and a Deterministic System
 
@@ -110,7 +112,7 @@ When this scenario is brought to its full extent, with parallel digital societie
 
 ## Societies of Societies
 
-Given that human beings will need to create these societies, there are a number of ramifications. Until now, and given that we exist in societies of our own, we understand the social norms and interpersonal dynamics that occur with groups of human beings, and in some cases human beings with animals. 
+Given that human beings will need to create these societies, there are a number of ramifications. Until now, and given that we exist in societies of our own, we understand the social norms and interpersonal dynamics that occur with groups of human beings, and in some cases human beings alongside animals.
 
 We will inadvertently create societies that represent these types of interactions, at least on some level. A digital society created by Americans will interact differently to a society created by the Vietnamese, even if it's only due to what the system should prioritise. Should it prioritise making money, resource efficiency, or its interactions with human beings?
 
@@ -120,9 +122,13 @@ The parallel digital societies we will create will show us reflections of our ow
 
 Given that we will create these societies, it's likely that they will interact in ways that we will struggle to understand. It seems obvious that the dog herder looks after their animals closely, but cares more for the dog than the sheep. To us it makes sense, human beings have interacted with dogs for thousands of years more than sheep. In the artificial parallel, there will likely be interactions between different components of organisations and societies in ways that we struggle to understand and comprehend, but these are emergent features unique to that organisational and social parallel. 
 
+It's likely that each parallel society will have its own unique structures that emerge over time. Robots can take many different forms, based on different specialisms and needs, but they will interact with other components of the organisation that is unique to that parallel organisation and parallel society. I expect parallel organisations will have their own norms, structures, modes of interaction and social dynamics even if it's only because the components that make up the organisation are unique. My point is that these parallel societies will be so foreign to what we know and understand, that it's not unlikely that we begin to treat them as the Romans treated the Gauls.
 
+Then comes the question, are we the Romans or the Gauls? Are these parallel societies more or less civilised, intelligent, sentient or capable then us? We may have created these parallel societies, but how should we interact with them? Are they pure extensions of our own societies? Who owns these societies? Do they own themselves?
 
+## Opportunities
 
+History has demonstrated that wealth and opportunity arises from the creation of industries and new markets. Each new parallel society has the potential to be a new industry and market, even ones that cannot yet be conceived of. 
 
 
 Human beings are one example of an SD system, and it's worth considering how human beings organise themselves because we are likely to see that different SD systems will organise themselves using similar patterns. 
