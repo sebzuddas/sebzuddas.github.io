@@ -1,0 +1,8 @@
+/* A drafting sheet under glass. */
+[data-material="blueprint"] {
+  --screen-bg: #0D2A4A; --screen-ink: #8FC1EC; --screen-dim: #4A7CAB; --screen-faint: #1E4470;
+  --screen-accent: #F2F7FC; --screen-alert: #FFB86B;
+  --panel-bg: #14505A; --panel-ink: #E2EEEC; --panel-muted: #B5D0CE; --panel-border: #2C717A; --lamp: #9FD2FF;
+  --bezel: #0D363D;
+  --scan: 0;
+}

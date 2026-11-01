@@ -1,0 +1,8 @@
+/* A vector CRT in a green enamel cabinet. */
+[data-material="phosphor"] {
+  --screen-bg: #050A06; --screen-ink: #5FBF79; --screen-dim: #2A5A38; --screen-faint: #173322;
+  --screen-accent: #8CFFA8; --screen-alert: #FFCF6E;
+  --panel-bg: #2F3E33; --panel-ink: #DDE8DA; --panel-muted: #B3C4B3; --panel-border: #4C6250; --lamp: #8CFFA8;
+  --bezel: #1B241E;
+  --scan: .05;
+}

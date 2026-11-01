@@ -1,0 +1,22 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ResourceRow from '../../../components/ResourceRow.astro';
+import SignupStrip from '../../../components/SignupStrip.astro';
+import { categories, type Category } from '../../../lib/resources';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const resources = await getCollection('resources');
+  return (Object.keys(categories) as Category[])
+    .map((category) => ({ params: { category }, props: { category, items: resources.filter((r) => r.data.category === category) } }))
+    .filter((path) => path.props.items.length);
+}
+
+const { category, items } = Astro.props;
+const { title, lede } = categories[category as Category];
+---
+<Base title={title} description={lede}>
+  <div class="prose"><h1>{title}</h1><p class="lede">{lede}</p></div>
+  <ol class="rows">{items.map((r) => <ResourceRow {...r.data} />)}</ol>
+  <SignupStrip />
+</Base>

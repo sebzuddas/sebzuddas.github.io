@@ -1,0 +1,13 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectRow from '../../components/ProjectRow.astro';
+import { getCollection } from 'astro:content';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+---
+<Base title="Projects" description="Engineering projects in control, simulation and complex systems.">
+  <div class="prose"><h1>Projects</h1></div>
+  <ol class="rows">
+    {projects.map((p) => <ProjectRow {...p.data} />)}
+  </ol>
+</Base>

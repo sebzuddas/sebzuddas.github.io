@@ -1,0 +1,27 @@
+---
+import Atom from '../components/Atom.astro';
+import Base from '../layouts/Base.astro';
+import SignupStrip from '../components/SignupStrip.astro';
+import { writing } from '../lib/providers/writing';
+import { shortDate, site } from '../lib/site';
+
+const posts = await writing.list();
+---
+<Base title="Writing" description="Essays on systems and engineering, published on Substack.">
+  <div class="prose"><h1>Writing</h1></div>
+  {posts.length ? (
+    <ol class="rows">
+      {posts.map((p) => (
+        <li><a class="row" href={p.url}>
+          <span class="n"><Atom /></span>
+          <h3>{p.title}</h3>
+          <span class="tag">{p.date && shortDate(p.date)}</span>
+          {p.description && <p>{p.description}</p>}
+        </a></li>
+      ))}
+    </ol>
+  ) : (
+    <p>Everything is on <a href={site.substack}>Substack</a>.</p>
+  )}
+  <SignupStrip />
+</Base>

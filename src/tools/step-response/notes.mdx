@@ -1,0 +1,7 @@
+## What this calculates
+
+The unit step response of the standard second-order system `ωn² / (s² + 2ζωn s + ωn²)`. The plot uses the exact closed form for underdamped, critically damped and overdamped cases.
+
+Overshoot and peak time use their analytic expressions and only apply below `ζ = 1`. Rise time, from 10% to 90%, and settling time, to within 2%, are found numerically from the exact response. Overshoot depends only on `ζ`, and every time scales with `1/ωn`. Settling time jumps at some values of `ζ` as a different oscillation peak becomes the last one outside the band.
+
+The values in the page address reproduce this plot, so a link shares the exact design.

@@ -1,0 +1,86 @@
+---
+import type { ToolMeta } from '../tools/types';
+
+interface Props {
+  tool: ToolMeta;
+  /** This panel owns the page address. */
+  permalink?: boolean;
+}
+const { tool, permalink = false } = Astro.props;
+const controls = tool.params.filter((p) => p.kind !== 'hidden');
+---
+<figure
+  class="panel screws has-side"
+  data-tool={tool.slug}
+  data-material={tool.material}
+  data-permalink={permalink ? '' : undefined}
+>
+  <div class="legend">
+    <span class="model">{tool.model}</span>
+    {tool.lamp && <span class="lamp" data-lamp><i></i>{tool.lamp}</span>}
+  </div>
+  <div class="glass main">
+    <canvas data-screen role="img" aria-label={tool.screenLabel} data-clickable={tool.clickable ? '' : undefined}></canvas>
+    <p class="fallback">{tool.fallback}</p>
+  </div>
+  {tool.channels && (
+    <div>
+      <div class="glass strip"><canvas data-recorder role="img" aria-label="30 second chart recorder"></canvas></div>
+      <div class="channels">
+        {tool.channels.map((c) => <span>{c.label}</span>)}
+        <span>30 s window</span>
+      </div>
+    </div>
+  )}
+  <div class="side">
+    <dl class="readouts">
+      {tool.readouts.map((r) => (
+        <div>
+          <dt>{r.label}</dt>
+          {r.text ? (
+            <dd class="word" data-readout={r.key}>--</dd>
+          ) : (
+            <dd>
+              <span class="seg"><span class="ghost" data-ghost={r.key} aria-hidden="true">88</span><span data-readout={r.key}>--</span></span>
+              <span class="unit">{r.unit}</span>
+            </dd>
+          )}
+        </div>
+      ))}
+    </dl>
+    <div class="controls">
+      {controls.map((p) => p.kind === 'switch' ? (
+        <label class="control switch"><span>{p.label}</span><input type="checkbox" data-param={p.key} checked={p.value} /></label>
+      ) : p.kind === 'choice' ? (
+        <label class="control"><span>{p.label}</span>
+          <select data-param={p.key}>{p.options.map((o) => <option value={o.value}>{o.label}</option>)}</select>
+        </label>
+      ) : p.kind === 'number' ? (
+        <label class="control">
+          <span class="head"><span>{p.label}</span><output data-param-value={p.key}></output></span>
+          <input type="range" data-param={p.key} min={p.min} max={p.max} step={p.step} value={p.value} />
+        </label>
+      ) : null)}
+    </div>
+    {(tool.actions || tool.presets) && (
+      <div class="buttons">
+        {tool.actions?.map((a) => <button type="button" data-action={a.key}>{a.label}</button>)}
+        {tool.presets?.map((p) => <button type="button" data-preset>{p.label}</button>)}
+      </div>
+    )}
+    {tool.keypads?.map((pad) => (
+      <div class="keypad" data-pad={pad.id}>
+        {pad.keys.map((k) => (
+          <button type="button" class={`key ${k.slot}`} data-key={k.codes.join(' ')} aria-label={`${k.cap}: ${k.action}`}>
+            <span class="cap">{k.cap}</span>
+            <span class="does" data-does>{k.action}</span>
+          </button>
+        ))}
+      </div>
+    ))}
+    {tool.tape && <p class="tape">{tool.tape}</p>}
+  </div>
+</figure>
+<script>
+  import '../lib/instrument/boot';
+</script>

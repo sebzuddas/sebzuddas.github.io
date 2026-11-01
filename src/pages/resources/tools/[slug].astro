@@ -1,0 +1,41 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Sections from '../../../components/Sections.astro';
+import ToolPanel from '../../../components/ToolPanel.astro';
+import { site } from '../../../lib/site';
+import { sunburst, titleClass } from '../../../lib/providers/poster';
+import { tools } from '../../../tools/registry';
+import type { ToolMeta } from '../../../tools/types';
+
+export function getStaticPaths() {
+  return tools.map((tool) => ({ params: { slug: tool.slug }, props: { tool } }));
+}
+
+const { tool } = Astro.props as { tool: ToolMeta };
+const notes = import.meta.glob<{ Content: any }>('../../../tools/*/notes.mdx', { eager: true });
+const Notes = notes[`../../../tools/${tool.slug}/notes.mdx`]?.Content;
+const rays = sunburst(tool.slug);
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: tool.title,
+  description: tool.summary,
+  applicationCategory: 'EngineeringApplication',
+  operatingSystem: 'Any',
+  url: `${site.url}/resources/tools/${tool.slug}/`,
+  isAccessibleForFree: true,
+  author: { '@type': 'Person', name: site.fullName, url: site.url },
+};
+---
+<Base title={tool.title} description={tool.summary} schema={schema}>
+  <section class="claim" style={`--ray-x: ${rays.x}%; --ray-y: ${rays.y}%; --ray-step: ${rays.step}deg`}>
+    <h1 class={titleClass(tool.title)}>{tool.title}</h1>
+    <p class="standfirst">{tool.summary}</p>
+  </section>
+  <ToolPanel tool={tool} permalink />
+  <Sections>
+    {Notes && <Notes />}
+    <h2 id="references">References</h2>
+    <ul>{tool.references.map((r) => <li>{r.url ? <a href={r.url}>{r.label}</a> : r.label}</li>)}</ul>
+  </Sections>
+</Base>

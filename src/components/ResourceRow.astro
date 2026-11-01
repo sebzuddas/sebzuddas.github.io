@@ -1,0 +1,20 @@
+---
+import Atom from './Atom.astro';
+import { deliveryProviders } from '../lib/providers/delivery';
+
+interface Props {
+  title: string;
+  summary: string;
+  audience?: string;
+  delivery: { provider: keyof typeof deliveryProviders; url: string; price?: string };
+}
+const { title, summary, audience, delivery } = Astro.props;
+---
+<li>
+  <a class="row" href={delivery.url}>
+    <span class="n"><Atom /></span>
+    <h3>{title}</h3>
+    <span class="tag">{deliveryProviders[delivery.provider].label}{delivery.price && `, ${delivery.price}`}</span>
+    <p>{summary}{audience && ` For ${audience}.`}</p>
+  </a>
+</li>

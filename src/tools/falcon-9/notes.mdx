@@ -1,0 +1,27 @@
+## Three ways to land
+
+**On.** This is the default. Model predictive control does everything, and the dashed line ahead of the booster is its current plan.
+
+**Manual.** W and S set the throttle, and the two key clusters swing the engines on the two sideways axes. Below about 20% the engines cut out, and when lit they will not throttle under 40%. Nothing corrects your mistakes.
+
+**Assisted.** You stop flying the rocket and start asking for things. The arrow keys request a sideways speed, W and S ask for a slower or faster descent, and the controller works out the throttle and engine angle. It will keep you safe, but it will not find the pad for you.
+
+The pad can be off to either side as well as ahead or behind, so you steer on two axes at once. The ring on the ground marks the point directly under the booster. Use it: judging depth from the booster alone is hard.
+
+The legs deploy by themselves below 80 m and take 2 seconds, so a descent that is still fast at that height will arrive before they lock out.
+
+To land, touch down under 3 m/s vertically and 2 m/s sideways, within 6 degrees of upright, and inside the pad.
+
+## How the autopilot decides
+
+Five times a second the controller predicts the next 6 seconds and solves for the best sequence of accelerations, then uses only the first one and solves again. That is the idea behind model predictive control: plan far ahead, commit to one step, and replan with what actually happened.
+
+Each plan is a small quadratic program, with the throttle and tilt limits as hard bounds, solved in your browser in pure JavaScript. Height and each sideways axis are planned separately. A fast inner loop then swings the engines to reach the tilt that the plan needs.
+
+## What this leaves out
+
+This is a teaching model. The two sideways axes are treated independently of each other. It starts on final approach, with the booster already near vertical, and leaves out wind, grid fin aerodynamics and engine dynamics. A real Falcon 9 cannot hover, because one Merlin at minimum throttle still lifts more than the near-empty booster weighs. This one can, because the thrust, mass and drag values are rounded for playability, not taken from the real vehicle. The legs are for show and do not change the flight.
+
+The test suite flies the autopilot from 60 different starts and requires a clean landing from all of them, and checks free fall against the exact solution with quadratic drag to within 1%.
+
+This is an independent demonstration and is not affiliated with or endorsed by SpaceX.

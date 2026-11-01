@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import Prose from '../layouts/Prose.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const pages = await getCollection('pages');
+  return pages.map((entry) => ({ params: { page: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props as any;
+const { Content } = await render(entry);
+const { title, description, poster, posterAlt } = entry.data;
+---
+{poster ? (
+  <Base title={title} description={description}>
+    <div class="wall">
+      <figure class="print screws"><img src={poster} alt={posterAlt} width="1024" height="1536" /></figure>
+      <article class="prose"><Content /></article>
+    </div>
+  </Base>
+) : (
+  <Prose title={title} description={description}>
+    <Content />
+  </Prose>
+)}

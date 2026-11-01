@@ -1,0 +1,9 @@
+<svg class="atom" viewBox="-24 -24 48 48" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+  {[0, 1, 2].map((orbit) => (
+    <g transform={`rotate(${orbit * 120})`}>
+      <ellipse rx="21" ry="8" />
+      <circle class="electron" r="3.2" fill="currentColor" stroke="none" style={`--orbit: ${orbit}`} />
+    </g>
+  ))}
+  <circle class="nucleus" r="3.6" fill="currentColor" stroke="none" />
+</svg>
