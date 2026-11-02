@@ -1,0 +1,11 @@
+---
+import type { ToolMeta } from '../tools/types';
+
+const { tool } = Astro.props as { tool: ToolMeta };
+---
+{(tool.actions || tool.upload) && (
+  <div class="buttons">
+    {tool.upload && <label class="upload"><input type="file" accept={tool.upload.accept} data-upload />{tool.upload.label}</label>}
+    {tool.actions?.map((a) => <button type="button" data-action={a.key}>{a.label}</button>)}
+  </div>
+)}

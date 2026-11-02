@@ -171,7 +171,7 @@ function toProjects(fetched: Fetched[]): Project[] {
   const overrides: Record<string, Partial<Project>> = config.overrides;
   const { pinned } = config;
   const listed = fetched.filter(({ repo }) => isListed(repo)).sort((a, b) => b.repo.pushed_at.localeCompare(a.repo.pushed_at));
-  const projects = listed.map(({ repo, rendered, found }, order): Project => {
+  return listed.map(({ repo, rendered, found }, order): Project => {
     const body = rendered && compileReadme(cleanReadme(rendered, repo));
     const poster = body ? formatReadme(body, repo.html_url) : undefined;
     const id = repo.name.toLowerCase();
@@ -192,7 +192,6 @@ function toProjects(fetched: Fetched[]): Project[] {
       ...overrides[repo.name],
     };
   });
-  return [...projects, ...config.unlisted.map((p, i) => ({ ...p, order: projects.length + i, embed: false }))];
 }
 
 /**

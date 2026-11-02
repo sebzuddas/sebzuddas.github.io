@@ -1,3 +1,5 @@
+import Eq from '../../components/Eq.astro';
+
 ## Three ways to land
 
 **On.** This is the default. Model predictive control does everything, and the dashed line ahead of the booster is its current plan.
@@ -17,6 +19,93 @@ To land, touch down under 3 m/s vertically and 2 m/s sideways, within 6 degrees 
 Five times a second the controller predicts the next 6 seconds and solves for the best sequence of accelerations, then uses only the first one and solves again. That is the idea behind model predictive control: plan far ahead, commit to one step, and replan with what actually happened.
 
 Each plan is a small quadratic program, with the throttle and tilt limits as hard bounds, solved in your browser in pure JavaScript. Height and each sideways axis are planned separately. A fast inner loop then swings the engines to reach the tilt that the plan needs.
+
+## The model inside the controller
+
+Prediction is the heart of the method, and it needs a model simple enough to solve many times a second. The controller's model has no rocket in it. On each axis it treats the booster as a point that can be accelerated directly, over 24 steps of <Eq inline tex="\Delta t = 0.25" /> seconds:
+
+<Eq tex="v_{k+1} = v_k + a_k\,\Delta t \qquad p_{k+1} = p_k + v_k\,\Delta t + \tfrac{1}{2}\,a_k\,\Delta t^2" />
+
+Unroll that and every future position and speed is a straight-line sum of the accelerations <Eq inline tex="a_0, \dots, a_{23}" />, which are the only unknowns:
+
+<Eq tex="p_k = p_0 + k\,\Delta t\,v_0 + \sum_{j<k} \Delta t^2\left(k - j - \tfrac{1}{2}\right) a_j" />
+
+This is what makes the problem easy. Because the prediction is linear in the accelerations, the cost below is a smooth bowl with a single lowest point, so the solver cannot get stuck on a bad plan.
+
+The simulation you are watching is richer than this model. It has drag, burning fuel, and a tilt that takes time to change. None of those are in the prediction. Drag alone reaches about 3.5 m/s² on the way down, a third of gravity.
+
+## What the plan is aiming at
+
+The plan follows a reference: where the booster should be at each future step. On the sideways axes that is the middle of the pad, at zero speed.
+
+Height uses a braking curve. For a constant deceleration of 3.2 m/s² that ends at 1.5 m/s on the ground, the right speed at height <Eq inline tex="z" /> is:
+
+<Eq tex="v_\text{ref}(z) = -\min\left(70,\ \sqrt{2 \times 3.2\,z + 1.5^2}\right)" />
+
+At 620 m that gives 63 m/s, which is close to the speed the booster starts at, and the descent takes about 20 seconds.
+
+The curve is doing an important job. The plan only sees 6 seconds ahead, and the ground is out of its view for most of the flight. The controller also has no rule saying it must stay above the ground. It lands because the reference has the whole descent built in, and the plan's task is to follow it.
+
+Assisted mode uses the same machinery with a different reference. Your keys become a sideways speed and a descent bias, with sideways speed limited to 6% of your height, up to 18 m/s. The reference then starts from wherever you are, which is why the autopilot no longer heads for the pad.
+
+## What makes a plan good
+
+Each candidate plan gets a score, and the solver finds the lowest. The score adds up tracking errors along the plan and the size of the accelerations:
+
+<Eq tex="J = \frac{1}{2} \sum_{k=1}^{24} w_k \left[ q_p \left(p_k - p_k^\text{ref}\right)^2 + q_v \left(v_k - v_k^\text{ref}\right)^2 \right] + \frac{r}{2} \sum_{k=0}^{23} a_k^2" />
+
+The weights are where the behaviour is set:
+
+| Weight | Charges for | Sideways | Height |
+| --- | --- | --- | --- |
+| <Eq inline tex="q_p" /> | wrong place | 0.06 | 0.1 |
+| <Eq inline tex="q_v" /> | wrong speed | 0.6 | 1.2 |
+| <Eq inline tex="r" /> | effort | 4 | 0.05 |
+| <Eq inline tex="w_{24}" /> | ending off target | 4 | 6 |
+
+Speed is weighted ten or twelve times more than position, so the booster eases in rather than rushing at the target and overshooting. The effort weight is 80 times higher sideways than in height. Sideways acceleration means leaning the booster, so the controller should do that gently, whereas height has to stay tight on the braking curve. The last step of the plan counts several times over, which stops the plan from putting off its problems until just past the horizon.
+
+## Limits, and solving for the plan
+
+The limits are physical. Thrust acts along the booster, so the upward share falls as it leans, and the engine cannot go below 40% once lit. With <Eq inline tex="F" /> as full thrust, <Eq inline tex="m" /> as current mass and <Eq inline tex="\theta, \phi" /> as the two tilts, the net upward acceleration must stay between:
+
+<Eq tex="0.4\,\frac{F}{m}\cos\theta\cos\phi - g \ \le\ a_z \ \le\ \frac{F}{m}\cos\theta\cos\phi - g" />
+
+Sideways, a 20 degree lean while holding the booster's weight gives <Eq inline tex="|a| \le g\tan 20^\circ \approx 3.6" /> m/s². These limits are recalculated at every replan, so the vertical range widens as fuel burns off.
+
+Together, the score and the limits form a quadratic program with box constraints:
+
+<Eq tex="\min_{a}\ \tfrac{1}{2}\,a^\top H\,a + f^\top a \quad\text{subject to}\quad a_\text{min} \le a \le a_\text{max}" />
+
+<Eq inline tex="H" /> depends only on the time step and the weights, so it is built once. <Eq inline tex="f" /> carries the current position, speed and reference, so it changes at every replan.
+
+The solver is accelerated projected gradient. It steps downhill on the score, clamps every acceleration back inside its limits, adds some momentum from the previous step, and repeats 120 times. Each solve starts from the previous plan, moved along by one step, because the new answer is usually close to the old one. Three solves, one per axis, take a fraction of a millisecond.
+
+The limits are where this differs from simpler control. A PID controller that asks for too much gets clipped, and has no idea that it was. This plan knows the limit in advance, so it can start to act early and use the limit on purpose. Sideways acceleration sat at its limit in about 30% of replans across the test flights.
+
+Try this: [watch the autopilot](#m=auto&x=7) and look at the dashed line. Early on it reaches out towards the pad. Then [fly it in Assisted](#m=assist&x=7), hold an arrow key, and watch the plan bend towards what you asked for.
+
+## From plan to engines
+
+The plan asks for accelerations, and a rocket cannot accelerate sideways directly. It has to lean, and it leans by swinging its engines. That job goes to a faster inner loop, which runs 50 times a second using the most recent plan.
+
+Throttle comes from the upward acceleration, corrected for the current lean. The sideways acceleration becomes a target tilt, limited to 20 degrees:
+
+<Eq tex="\theta_\text{target} = \arctan\frac{a_x}{a_z + g}" />
+
+A proportional and derivative loop then turns the tilt error into an engine angle, limited to 15 degrees. Below 25 m the target tilt is zero, so the booster finishes upright even if that gives up some sideways correction.
+
+The engine swing has a catch. Swinging the engines to lean the booster one way first pushes the base the other way, so the booster briefly moves in the wrong direction before the lean takes over. The plan ignores this, and it also ignores that a lean takes a second or two to build. Both are more gaps between the model and the rocket for replanning to absorb.
+
+The one link between the axes is the lean: both the vertical limits and the throttle allow for it. Otherwise each axis is planned as though the others did not exist.
+
+## Why replanning is the point
+
+Every plan here is wrong. Across the test flights, the first plan's height for 6 seconds later was off by about 8 m on average and 16 m at worst. That does not matter.
+
+Each plan only has to be right for the 0.2 seconds before the next one replaces it. Each new plan starts from where the booster actually is, so a model error becomes a measured error and gets corrected. This is why the controller is feedback, even though each plan on its own is open loop. Across those flights it landed on average about 1 m from the centre of the pad, and never more than 3.5 m, on a pad with a 20 m radius.
+
+Real landing guidance works on the same principle of solving an optimisation in flight, with a richer problem. Blackmore's paper in the references describes convex optimisation that finds a fuel-efficient path all the way to the ground, with constraints on the path itself, where this controller follows a fixed curve inside a short window.
 
 ## What this leaves out
 

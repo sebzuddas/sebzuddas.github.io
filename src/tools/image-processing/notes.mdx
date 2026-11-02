@@ -1,0 +1,84 @@
+import Eq from '../../components/Eq.astro';
+
+## An image is a signal
+
+A digital image is a grid of numbers, and everything in signal processing carries over to it. The difference is that the signal runs across space rather than time, in two directions at once. Frequency here means how quickly brightness changes as you move across the picture: a clear sky is low frequency, and a page of fine print is high frequency.
+
+The panel shows your image before and after, with the spectrum of each underneath. The curve at the bottom is the filter's gain at each spatial frequency.
+
+Upload any picture to try this on your own. **Your image stays in your browser:** it is never sent anywhere, and it is gone when you leave the page. It is cropped to the middle square and scaled to the working size, and a shared link does not include it.
+
+Try this: compare [the test card](#src=card&d=kernel&k=custom&cu=0%200%200%200%201%200%200%200%200) untouched with the [zone plate](#src=rings&d=kernel&k=custom&cu=0%200%200%200%201%200%200%200%200), a pattern that holds every frequency in every direction.
+
+## Kernels: sliding a small grid
+
+The simplest way to filter an image is to slide a small grid of weights over it. At each pixel, multiply the neighbours by the weights and add them up. This is the same convolution as the one-dimensional tool, with one more sum:
+
+<Eq tex="y[i, j] = \sum_{k}\sum_{l} h[k, l]\; x[i - k, j - l]" />
+
+The grid <Eq inline tex="h" /> is called a kernel, and it plays the same part as an impulse response. Its weights decide everything.
+
+**Blur** uses positive weights that add up to 1, so each pixel becomes an average of its neighbours and a flat area stays the same brightness. A [box blur](#d=kernel&k=box&s=3.0) treats all neighbours equally, and a [Gaussian blur](#d=kernel&k=gaussian&s=3.0) weights the nearest ones most, which looks far more natural.
+
+**Sharpening** does the opposite: it [subtracts the neighbours](#d=kernel&k=sharpen&s=2.0) to exaggerate differences. It cannot recover lost detail. It only makes the edges that remain look crisper, and it makes noise worse.
+
+**Edge detection** uses weights that add up to 0, so flat areas vanish and only changes survive. [Sobel](#d=kernel&k=sobel) measures the gradient in both directions. [The Laplacian](#d=kernel&k=laplacian) measures curvature, and responds to edges in any direction with a single kernel.
+
+Try this: write [your own kernel](#d=kernel&k=custom&cu=-1%20-1%20-1%20-1%209%20-1%20-1%20-1%20-1). Nine numbers, read row by row. If they add up to 1, overall brightness is kept.
+
+## The 2D spectrum
+
+The Fourier transform breaks a picture into sine-wave stripes, each with its own frequency and direction. The spectrum plots how much of each there is:
+
+<Eq tex="X[u, v] = \sum_{m}\sum_{n} x[m, n]\, e^{-j 2\pi (um + vn)/N}" />
+
+The centre is zero frequency, the average brightness. Moving out from the centre means finer detail. Direction matters too: the angle of a point tells you the direction of its stripes, so a picture with strong vertical edges has a bright line running horizontally through its spectrum. Brightness here is on a logarithmic scale, because the low frequencies are enormously stronger than the rest.
+
+The surprising thing is how little of it most images need. A few low frequencies carry the shapes you recognise, and this is the idea behind compression such as JPEG, which stores the strong frequencies and drops most of the weak ones.
+
+## Filtering the spectrum
+
+This gives a second way to filter. Transform the image, multiply each frequency by a gain, and transform back. That is the convolution theorem again: multiplying spectra is the same as convolving images.
+
+The filter families from the signal processing tool all work here. The tool takes the gain curve of the design and spins it around the centre, so each ring of the spectrum gets the gain for its distance out. That makes the filter the same in every direction.
+
+<Eq tex="Y[u, v] = H\!\left(\sqrt{u^2 + v^2}\right) X[u, v]" />
+
+- A **low-pass** keeps the centre, which blurs the image.
+- A **high-pass** removes the centre, which leaves the edges on a grey background.
+- A **band-pass** keeps one scale of detail.
+- A **band-stop** removes one scale.
+
+Try this: on [the zone plate](#src=rings&d=frequency&t=butterworth&r=lowpass&n=4&c=0.200), the filter's shape appears directly in the picture, since each radius is a different frequency. Then try [a high-pass](#src=rings&d=frequency&t=butterworth&r=highpass&n=4&c=0.200).
+
+## Ringing
+
+A brick-wall filter seems ideal: keep everything below the cutoff and nothing above. In images it looks terrible. Ghost outlines appear around every sharp edge.
+
+This is the Gibbs phenomenon. A sudden cut in frequency means a long, wavy kernel in space, because a rectangle in one domain is a sinc function in the other. Those waves spread out around each edge.
+
+The filter families show the same trade as in one dimension. The steep elliptic and Chebyshev filters ring, and gentle ones do not. That is why image work tends to prefer soft filters: Bessel, or low-order Butterworth, or a Gaussian. Steepness matters less to the eye than ringing does.
+
+Try this, at the same cutoff: [ideal](#d=frequency&t=ideal&r=lowpass&c=0.060), [elliptic](#d=frequency&t=elliptic&r=lowpass&n=6&c=0.060&rp=1.0&rs=50), [Butterworth](#d=frequency&t=butterworth&r=lowpass&n=2&c=0.060) and [Bessel](#d=frequency&t=bessel&r=lowpass&n=2&c=0.060). Look at the dark edge around the checker square and the sun.
+
+## Cleaning up noise
+
+Random noise is spread across the whole spectrum, and images are mostly low frequency. So a low-pass removes more noise than picture, though it also softens real edges.
+
+The readouts measure this as peak signal-to-noise ratio, comparing with the clean image. Higher is closer to the original, and each 6 dB is about half the error.
+
+<Eq tex="\text{PSNR} = -10 \log_{10}\left( \frac{1}{N} \sum_i \left(x_i - y_i\right)^2 \right)" />
+
+Try this: start from [a noisy image with a filter](#nz=0.10&d=frequency&t=butterworth&r=lowpass&n=2&c=0.160) and move the cutoff. Too high and the noise stays. Too low and the picture blurs away. Somewhere between is a best value, and the Quality after readout will find it for you.
+
+Regular interference is much easier. Stripes are a single frequency, so they show up as two bright dots in the spectrum, and a [narrow band-stop](#st=0.20&d=frequency&t=butterworth&r=bandstop&n=3&c=0.200&b=0.015) removes them almost completely. Compare the two spectra to find the dots. This one is a ring, so it also takes a little real detail at that radius. A proper notch would only touch the two dots.
+
+## What this leaves out
+
+The working size tops out at 512 pixels so that it runs in the browser. Images are cropped to a square, because that keeps the transforms simple.
+
+Frequency filters use gain only, with no phase shift. So a Bessel filter's steady delay, which is its great strength in time, has no meaning here: only its gentle shape carries over. The transform also treats the image as if it repeats, so the left edge affects the right, and sharp filters can show this at the borders. Kernels instead repeat the nearest edge pixel.
+
+Each colour channel is filtered separately, in plain sRGB values. Serious photo work converts to linear light first, which is more accurate for blurs but not worth the extra step here.
+
+The test suite checks that the transform inverts exactly, that blurs keep flat areas flat, that a Sobel kernel finds a known edge, that each radial filter matches its one-dimensional design, and that stripes and noise are both reduced by the filters meant to remove them.

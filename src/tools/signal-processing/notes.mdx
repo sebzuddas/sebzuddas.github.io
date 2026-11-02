@@ -1,0 +1,123 @@
+import Eq from '../../components/Eq.astro';
+
+## What a signal is
+
+A signal is a quantity that changes over time: a voltage from a microphone, a temperature, a price. Digital signal processing, or DSP, is what you can do to one with arithmetic alone.
+
+This instrument is a small synthesiser. Two generators make waves, those waves are combined, and the result goes through a filter. The four plots show the same sound in four ways: as a waveform in time, as a spectrum of frequencies, as the filter's gain at each frequency, and as poles and zeros on the Z plane.
+
+Turn on the Sound switch at the top of the panel to hear it. The sound is computed by the same code that draws the plots, so what you hear is exactly what you see. The dim line is the signal before the filter, and the bright line is after it.
+
+Try this: start with [a plain sine wave](#w1=sine&f1=440&l1=0.80&l2=0.00&t=off), then [a saw wave at the same pitch](#w1=saw&f1=440&l1=0.80&l2=0.00&t=off). Same note, very different sound.
+
+## Sampling
+
+A computer cannot store a continuous wave. It stores a number every so often, and this bench takes 8000 numbers each second:
+
+<Eq tex="x[n] = x(nT), \qquad T = \frac{1}{f_s}" />
+
+8000 samples per second is telephone quality. Real audio usually uses 44,100 or 48,000. This low rate is chosen on purpose, because it makes the effects below easy to see and hear.
+
+The key limit is the Nyquist frequency, half the sampling rate, which here is 4000 Hz. To capture a frequency you need more than two samples per cycle.
+
+## Aliasing
+
+What happens above Nyquist? The samples cannot tell the difference between a high frequency and a lower one, so the high frequency shows up disguised as the lower one. It folds back around Nyquist like a sheet of paper:
+
+<Eq tex="f_{\text{heard}} = \left| f - f_s \cdot \text{round}\left(\frac{f}{f_s}\right) \right|" />
+
+So 5000 Hz, sampled at 8000 Hz, is heard at 3000 Hz. You have seen this in films, where a wheel at speed seems to turn slowly backwards. The camera is sampling the wheel too slowly.
+
+Try this: play [a 5000 Hz sine wave](#w1=sine&f1=5000&l1=0.80&l2=0.00&t=off) and read where it lands. Then drag Frequency 1 slowly upward from 3500 Hz. The pitch rises, reaches 4000 Hz, then falls, even though the slider is still going up.
+
+This is why real systems filter before sampling. Once a signal has aliased, no later processing can separate it from a true low frequency.
+
+## Frequency content
+
+Any repeating wave can be built from sine waves: a fundamental at the pitch you hear, and harmonics at whole-number multiples of it. The spectrum shows how much of each is there.
+
+A sine wave is a single line. A square wave has only odd harmonics, falling as 1/n. A saw wave has every harmonic, also falling as 1/n, which is why it sounds so bright. A triangle has odd harmonics that fall much faster, at 1/n², which is why it sounds soft. Noise has energy everywhere.
+
+<Eq tex="x_{\text{square}}(t) = \frac{4}{\pi} \sum_{n\ \text{odd}} \frac{1}{n} \sin(2\pi n f t)" />
+
+Sharp corners need high frequencies. That means these waves have harmonics above Nyquist, and those harmonics alias. Real synthesisers go to some trouble to remove them, and this one does not, so you can hear the problem.
+
+Try this: compare [a square wave](#w1=square&f1=220&l1=0.80&l2=0.00&t=off) with [a triangle](#w1=triangle&f1=220&l1=0.80&l2=0.00&t=off), then raise [a saw to 1760 Hz](#w1=saw&f1=1760&l1=0.80&l2=0.00&t=off) and look for spectral lines that do not sit at multiples of the pitch. Those are aliases.
+
+## What a filter does
+
+A filter changes how much of each frequency gets through. Multiply the spectrum by the gain curve, and you have the output spectrum. That is the convolution theorem again: in time the filter is a convolution, and in frequency it is a multiplication.
+
+The four standard shapes are named for what they let through.
+
+- **Low-pass** keeps what is below the cutoff. It makes sounds darker.
+- **High-pass** keeps what is above it. It makes sounds thinner.
+- **Band-pass** keeps a band around the cutoff. Sweep it and you have a wah pedal.
+- **Band-stop** removes a band. A narrow one is called a notch, and is how you remove mains hum.
+
+The resonant biquad is the simplest filter here. Its Q sets how sharply it behaves near the cutoff: high Q makes a resonant peak, and the filter rings.
+
+Try this: take [a saw through a resonant low-pass](#w1=saw&f1=110&l1=1.00&l2=0.00&t=biquad&r=lowpass&c=800&q=8.0), play it, and sweep the Cutoff slider. Then remove [a tone with a notch](#w1=saw&f1=220&l1=0.80&w2=sine&f2=1500&l2=0.40&t=biquad&r=bandstop&c=1500&q=4.0), and watch the line at 1500 Hz vanish from the spectrum.
+
+## Filter families
+
+No real filter can pass everything up to a cutoff and nothing after it. Every design trades steepness against something else, and the classic families are named after who worked out each trade. Order sets how much you have to spend: each extra order adds about 20 dB per decade to the slope, at the cost of more arithmetic and more delay.
+
+- **Butterworth** is as flat as possible in the passband, with no ripple. It is 3 dB down at the cutoff, whatever the order. This is the sensible default.
+- **Chebyshev type I** allows ripple in the passband, and spends it on a steeper edge. More ripple buys more steepness.
+- **Chebyshev type II** keeps the passband flat and puts the ripple in the stopband instead. Here the cutoff marks where the stopband begins.
+- **Elliptic** ripples in both, and has the steepest edge possible for its order. Its zeros sit on the unit circle, and they carve deep notches just past the cutoff.
+- **Bessel** gives up steepness for time. It has the steadiest delay across its passband, so a wave keeps its shape and a sharp edge does not ring.
+- **Linkwitz-Riley** is built for loudspeaker crossovers. It is two Butterworth filters in series, so it is 6 dB down at the cutoff, and its low-pass and high-pass outputs add back to a flat response. That means no bump where the woofer hands over to the tweeter. Its order is always even, so odd settings round up.
+
+Try this: put noise through each at the same order, and watch the edge of the spectrum. Start with [Butterworth](#w1=noise&l1=0.80&l2=0.00&t=butterworth&r=lowpass&n=6&c=1000), then [Chebyshev I](#w1=noise&l1=0.80&l2=0.00&t=chebyshev1&r=lowpass&n=6&c=1000&rp=1.0), [elliptic](#w1=noise&l1=0.80&l2=0.00&t=elliptic&r=lowpass&n=6&c=1000&rp=1.0&rs=50) and [Bessel](#w1=noise&l1=0.80&l2=0.00&t=bessel&r=lowpass&n=6&c=1000). Watch the poles too: Butterworth poles sit on a circle, Chebyshev poles on an ellipse. Then see how [a square wave through Bessel](#w1=square&f1=200&l1=0.80&l2=0.00&t=bessel&r=lowpass&n=6&c=1000) keeps its shape, where [elliptic](#w1=square&f1=200&l1=0.80&l2=0.00&t=elliptic&r=lowpass&n=6&c=1000&rp=1.0&rs=50) rings at every edge.
+
+## How a filter works
+
+A digital filter is only a short recipe of multiplying and adding. Each output sample is a weighted sum of recent inputs and recent outputs:
+
+<Eq tex="y[n] = b_0 x[n] + b_1 x[n-1] + b_2 x[n-2] - a_1 y[n-1] - a_2 y[n-2]" />
+
+There are two families. A finite impulse response (FIR) filter uses only past inputs, so a single click fades out after a fixed number of samples. An infinite impulse response (IIR) filter also feeds back past outputs, so it can ring on for much longer. The filters here are IIR, which get a sharp response from very little arithmetic. FIR filters need more computing power, but they are always stable and can leave the shape of a wave intact.
+
+## The Z plane
+
+The Z transform turns that recipe into a ratio of polynomials, where <Eq inline tex="z^{-1}" /> means "one sample ago":
+
+<Eq tex="H(z) = \frac{b_0 + b_1 z^{-1} + b_2 z^{-2}}{1 + a_1 z^{-1} + a_2 z^{-2}}" />
+
+The roots of the numerator are the zeros, and the roots of the denominator are the poles.
+
+The unit circle holds every frequency the system can represent. Zero hertz is at the right, Nyquist at the left, and the top half of the circle runs between them. A sine wave at frequency <Eq inline tex="f" /> sits at an angle:
+
+<Eq tex="\theta = 2\pi \frac{f}{f_s}" />
+
+To read the gain at any frequency, stand at that point on the circle. The gain is the product of your distances to the zeros, divided by the product of your distances to the poles. So a pole near the circle pushes the gain up at that frequency, and a zero on the circle pulls it to nothing.
+
+Stability is simple: every pole must lie inside the unit circle, or the filter's feedback grows without limit. Here the sliders stop just short of it, which also protects your speakers.
+
+## Build your own filter
+
+Choose "Your poles and zeros" and drag the markers. Poles are × and zeros are ○. They come in mirror-image pairs, so that the filter's coefficients stay real numbers. Each pair has a radius, for how close it sits to the circle, and an angle, for the frequency it acts on. Setting a radius to 0 turns that pair off.
+
+Try this: [noise through a single pole pair](#w1=noise&l1=0.80&l2=0.00&t=custom&p1r=0.95&p1a=1000&p2r=0.00&z1r=0.00&z2r=0.00) makes a whistle at 1000 Hz. Drag the pole towards the circle, and the whistle gets narrower and purer.
+
+Then try [a zero on the circle](#w1=noise&l1=0.80&l2=0.00&t=custom&p1r=0.00&p2r=0.00&z1r=1.00&z1a=1000&z2r=0.00) to cut a hole in the noise at 1000 Hz. [Two poles side by side](#w1=noise&l1=0.80&l2=0.00&t=custom&p1r=0.95&p1a=800&p2r=0.95&p2a=1600&z1r=0.00&z2r=0.00) make two formants, which is how the vocal tract shapes vowels.
+
+## Combining signals
+
+Adding two signals keeps their frequencies as they are. Multiplying them does something different: it makes new ones, at the sum and the difference of the originals.
+
+<Eq tex="\sin(a)\sin(b) = \tfrac{1}{2}\cos(a-b) - \tfrac{1}{2}\cos(a+b)" />
+
+This is called ring modulation, and it is how radios shift a signal up to a broadcast frequency and back down again.
+
+Try this: [440 Hz times 90 Hz](#w1=sine&f1=440&l1=1.00&w2=sine&f2=90&l2=1.00&m=ring&t=off). The spectrum shows lines at 350 Hz and 530 Hz, and neither original tone is there.
+
+## What this leaves out
+
+The rate is fixed at 8000 samples per second. The generators are not band limited, by design. Whole-number frequencies are used so that the sound loops cleanly, and noise loops once a second, which a sharp ear may catch.
+
+The spectrum uses a Hann window over 2048 samples, so a pure tone shows as a narrow peak rather than a single line. Volume is capped, and the sound stops when you leave the tab. The filters are digital versions of analog designs, made with the bilinear transform, so very close to Nyquist their shapes are squeezed. When you play at this low rate, your browser resamples the sound for your speakers, which can slightly colour the very top of the range.
+
+The test suite checks each family against what defines it: Butterworth at 3 dB and its roll-off, ripple and stopband depth for Chebyshev and elliptic, steady delay for Bessel, and the flat sum of Linkwitz-Riley, with every family stable across the controls. It also checks the spectrum against the known harmonics of a square wave, and that a filter's measured gain on a sine wave matches the computed curve.

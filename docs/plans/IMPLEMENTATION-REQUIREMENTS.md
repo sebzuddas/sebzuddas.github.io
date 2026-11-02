@@ -115,8 +115,8 @@ the token layer capable of six themes, ship one identity.
 
 ## 3. The hero instrument: freeze the model
 
-The owner replaced the cascade network with a Falcon 9 landing game. The cascade rig stays on the site
-as a secondary tool at `/resources/tools/cascade/`, with its spec in its own notes and tests.
+The owner replaced the cascade network with a Falcon 9 landing game, and later removed the cascade rig
+from the site in favour of the convolution tool at `/resources/tools/convolution/`.
 
 **Modes.** Three, shown as "Autopilot status": On, full model predictive control, which is the default
 and lands on its own; Assisted, the visitor flying with assistance; Manual, the visitor flying open

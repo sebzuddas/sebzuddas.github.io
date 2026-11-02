@@ -1,9 +1,10 @@
 export const site = {
   name: 'Seb Zuddas',
   fullName: 'Sebastiano Zuddas',
+  role: 'Systems and control engineer',
   location: 'London, UK',
   description:
-    'I have always had a founder\'s impulse, and systems thinking is how I put engineering to work on real problems in people\'s lives.',
+    'I combine systems thinking with a founders impulse to put engineering to work on real problems in people\'s lives.',
   url: 'https://sebzuddas.com',
   wiki: 'https://wiki.sebzuddas.com',
   substack: 'https://sebzuddas.substack.com',

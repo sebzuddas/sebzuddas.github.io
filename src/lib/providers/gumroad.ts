@@ -5,13 +5,12 @@ import type { Category } from '../resources';
 const CACHE = '.cache/gumroad.json';
 const CACHE_HOURS = 1;
 const CATEGORY: Category = 'lists';
-/** Vercel Hobby forbids advertising a sale. Turn this on only after moving to Pro. */
-const LIST_PAID = false;
 
 export interface StoreProduct {
   permalink: string;
   name: string;
   price_cents: number;
+  currency_code: string;
 }
 
 export interface Resource {
@@ -47,21 +46,20 @@ export function parseSummary(html: string): string {
   return decode(html.match(/<meta property="og:description" content="([^"]*)"/)?.[1] ?? '').trim();
 }
 
+export function priceOf({ price_cents, currency_code }: StoreProduct): string {
+  if (!price_cents) return 'free';
+  return new Intl.NumberFormat('en-GB', { style: 'currency', currency: currency_code.toUpperCase() }).format(price_cents / 100);
+}
+
 export function toResources(fetched: Fetched[]): Resource[] {
-  return fetched.flatMap(({ product, summary }) => {
-    if (product.price_cents > 0 && !LIST_PAID) {
-      console.warn(`Left ${product.name} off the site: it is priced, and Vercel Hobby forbids advertising a sale`);
-      return [];
-    }
-    return [{
-      id: product.permalink,
-      title: product.name,
-      summary,
-      category: CATEGORY,
-      tier: 'open' as const,
-      delivery: { provider: 'gumroad' as const, url: `${site.gumroad}/l/${product.permalink}`, price: 'free' },
-    }];
-  });
+  return fetched.map(({ product, summary }) => ({
+    id: product.permalink,
+    title: product.name,
+    summary,
+    category: CATEGORY,
+    tier: 'open',
+    delivery: { provider: 'gumroad', url: `${site.gumroad}/l/${product.permalink}`, price: priceOf(product) },
+  }));
 }
 
 async function page(url: string): Promise<string> {

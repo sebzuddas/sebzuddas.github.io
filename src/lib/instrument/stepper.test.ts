@@ -1,12 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { hero, DT } from '../../tools/cascade/model';
 import { Stepper } from './stepper';
 
+const DT = 0.05;
+
 function simulate(hz: number, seconds: number) {
-  const model = hero(5);
-  const stepper = new Stepper(DT, () => model.step());
+  const model = { tick: 0, value: 1 };
+  const stepper = new Stepper(DT, () => {
+    model.tick++;
+    model.value = (model.value * 3.7 * (1 - model.value / 4)) % 4;
+  });
   for (let i = 0; i < seconds * hz; i++) stepper.advance(1 / hz);
-  return { tick: model.tick, activity: model.activity };
+  return model;
 }
 
 describe('Stepper', () => {

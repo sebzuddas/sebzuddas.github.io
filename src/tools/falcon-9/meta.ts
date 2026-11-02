@@ -39,6 +39,7 @@ export const meta: ToolMeta = {
     { label: 'CH1 descent, 0 to 80 m/s', min: 0, max: 80 },
     { label: 'CH2 throttle, 0 to 100%', min: 0, max: 1 },
   ],
+  actionsLow: true,
   actions: [{ key: 'fly', label: 'Launch' }],
   keypads: [
     {

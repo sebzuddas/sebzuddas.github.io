@@ -9,7 +9,8 @@ const THREE_D_LIMIT = 220;
 const gz = (file) => gzipSync(fs.readFileSync(path.join(dir, file))).length / 1024;
 
 let failed = false;
-for (const page of ['dist/index.html']) {
+const tools = fs.readdirSync('dist/resources/tools', { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => `dist/resources/tools/${d.name}/index.html`);
+for (const page of ['dist/index.html', ...tools]) {
   const html = fs.readFileSync(page, 'utf8');
   const eager = [...new Set([...html.matchAll(/\/_astro\/([^"']+\.js)/g)].map((m) => m[1]))];
   const eagerSize = eager.reduce((sum, file) => sum + gz(file), 0);

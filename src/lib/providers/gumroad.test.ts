@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { parseStore, parseSummary, toResources } from './gumroad';
 
-const product = { permalink: 'admfen', name: 'Sixty &amp; five', price_cents: 0 };
+const product = { permalink: 'admfen', name: 'Sixty &amp; five', price_cents: 0, currency_code: 'gbp' };
 const store = (sections: unknown) => `<div data-page="${JSON.stringify({ props: { sections } }).replace(/&/g, '&amp;').replace(/"/g, '&quot;')}"></div>`;
 
 describe('parseStore', () => {
@@ -29,7 +29,7 @@ describe('toResources', () => {
     });
   });
 
-  it('leaves priced products off while on Vercel Hobby', () => {
-    expect(toResources([{ product: { ...product, price_cents: 500 }, summary: '' }])).toEqual([]);
+  it('shows the real price of paid products', () => {
+    expect(toResources([{ product: { ...product, price_cents: 500 }, summary: '' }])[0].delivery.price).toBe('£5.00');
   });
 });

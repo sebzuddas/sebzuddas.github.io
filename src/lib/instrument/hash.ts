@@ -26,6 +26,8 @@ export function decode(params: ParamDef[], hash: string): ToolState {
       if (raw === '0' || raw === '1') state[p.key] = raw === '1';
     } else if (p.kind === 'choice') {
       if (p.options.some((o) => o.value === raw)) state[p.key] = raw;
+    } else if (p.kind === 'text') {
+      if (raw.length <= p.maxLength) state[p.key] = raw;
     } else {
       const n = Number(raw);
       if (!Number.isFinite(n)) continue;

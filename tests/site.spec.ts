@@ -1,12 +1,13 @@
 import fs from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
+import { regions } from '../src/tools/step-response/model';
 
 const choose = async (page: Page, option: string) => {
   await page.locator('.dropdown button').click();
   await page.getByRole('option', { name: option }).click();
 };
 
-const routes = ['/', '/resources/tools/', '/resources/tools/cascade/', '/resources/tools/step-response/', '/resources/tools/falcon-9/', '/projects/', '/projects/grid_mpc/', '/resources/', '/writing/', '/about/', '/posts/personal-system-map/'];
+const routes = ['/', '/resources/tools/', '/resources/tools/convolution/', '/resources/tools/image-processing/', '/resources/tools/pid/', '/resources/tools/signal-processing/', '/resources/tools/step-response/', '/resources/tools/falcon-9/', '/projects/', '/projects/grid_mpc/', '/resources/', '/writing/', '/about/', '/posts/personal-system-map/'];
 const widths = [390, 768, 1440, 2560];
 const legacy = fs.readFileSync('tests/legacy-urls.txt', 'utf8').trim().split('\n');
 
@@ -59,58 +60,267 @@ test('generated content is only ever empty', async ({ page }) => {
   }
 });
 
-test('opening the loop puts the lamp out and zeroes the output', async ({ page }) => {
-  await page.goto('/resources/tools/cascade/');
-  const lamp = page.locator('[data-lamp]');
-  await expect(lamp).toHaveClass(/on/);
-  await page.locator('[data-param="l"]').uncheck();
-  await expect(lamp).not.toHaveClass(/on/);
-  await expect(page.locator('[data-readout="u"]')).toHaveText('0.00');
-});
-
 test('permalink restores state and an identical frame', async ({ browser }) => {
   const context = await browser.newContext({ reducedMotion: 'reduce' });
   const page = await context.newPage();
-  const hash = '#a=0.12&l=0&h=0.08&s=transit&x=11';
+  const hash = '#fs=gauss&fw=1.4&gs=tri&ga=0.7&p=1.20';
   const snapshot = async () => {
-    await page.goto(`/resources/tools/cascade/${hash}`);
+    await page.goto(`/resources/tools/convolution/${hash}`);
     await page.reload();
-    await expect(page.locator('[data-readout="A"]')).not.toHaveText('--');
+    await expect(page.locator('[data-readout="y"]')).not.toHaveText('--');
     await page.waitForTimeout(200);
     return page.evaluate(() => ({
       screen: document.querySelector<HTMLCanvasElement>('[data-screen]')!.toDataURL(),
-      strip: document.querySelector<HTMLCanvasElement>('[data-recorder]')!.toDataURL(),
-      a: (document.querySelector('[data-param="a"]') as HTMLInputElement).value,
-      s: (document.querySelector('[data-param="s"]') as HTMLSelectElement).value,
-      l: (document.querySelector('[data-param="l"]') as HTMLInputElement).checked,
+      f: (document.querySelector('[data-param="fs"]') as HTMLSelectElement).value,
+      w: (document.querySelector('[data-param="fw"]') as HTMLInputElement).value,
+      p: (document.querySelector('[data-param="p"]') as HTMLInputElement).value,
     }));
   };
   const first = await snapshot();
   const second = await snapshot();
   expect(first).toEqual(second);
-  expect(first.a).toBe('0.12');
-  expect(first.s).toBe('transit');
-  expect(first.l).toBe(false);
+  expect(first.f).toBe('gauss');
+  expect(first.w).toBe('1.4');
+  expect(first.p).toBe('1.2');
   await context.close();
+});
+
+test('convolution plays, and a bad formula says so without breaking', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  await page.goto('/resources/tools/convolution/');
+  await expect(page.locator('[data-readout="ag"]')).not.toHaveText('--');
+  await expect.poll(async () => Number(await page.locator('[data-param="p"]').inputValue())).toBeGreaterThan(-5.9);
+  await page.goto('/resources/tools/convolution/#fs=formula&ff=alert(1)&p=0.00');
+  await page.reload();
+  await expect(page.locator('[data-param="ff"]')).toHaveAttribute('aria-invalid', 'true');
+  await page.locator('[data-param="ff"]').fill('exp(-t)*step(t)');
+  await expect(page.locator('[data-param="ff"]')).toHaveAttribute('aria-invalid', 'false');
+  await expect(page.locator('[data-param="gw"]')).toBeVisible();
+  expect(errors).toEqual([]);
+});
+
+test('changing a function restarts the sweep, and moving the position does not', async ({ page }) => {
+  await page.goto('/resources/tools/convolution/#p=4.00');
+  await expect(page.locator('[data-readout="ag"]')).not.toHaveText('--');
+  const position = () => page.locator('[data-param="p"]').inputValue().then(Number);
+  await page.locator('[data-param="fw"]').fill('3');
+  await expect.poll(position).toBeLessThan(0);
+  await expect.poll(position).toBeGreaterThan(-5.9);
+  await page.locator('[data-param="p"]').fill('2');
+  await page.waitForTimeout(300);
+  expect(await position()).toBe(2);
+});
+
+test('sound stays off until switched on, and the switch stops it', async ({ page }) => {
+  await page.goto('/resources/tools/signal-processing/');
+  await expect(page.locator('[data-readout="st"]')).toHaveText('Clean');
+  const toggle = page.locator('[data-toggle="sound"]');
+  await expect(toggle).not.toBeChecked();
+  const playing = () => page.evaluate(() => document.querySelector('.panel')!.getAttribute('data-sound'));
+  await toggle.check();
+  await expect.poll(playing).toBe('on');
+  await page.locator('[data-param="c"]').fill('2000');
+  await expect.poll(playing).toBe('on');
+  await toggle.uncheck();
+  await expect.poll(playing).toBe('off');
+  await expect(page.locator('[data-lamp]')).toHaveCount(0);
+});
+
+test('filter controls follow the family', async ({ page }) => {
+  await page.goto('/resources/tools/signal-processing/#t=butterworth&n=6');
+  await expect(page.locator('[data-readout="or"]')).toHaveText('6');
+  await expect(page.locator('[data-param="rp"]')).toBeHidden();
+  await page.goto('/resources/tools/signal-processing/#t=elliptic&r=bandpass&n=3');
+  await page.reload();
+  await expect(page.locator('[data-param="rp"]')).toBeVisible();
+  await expect(page.locator('[data-param="rs"]')).toBeVisible();
+  await expect(page.locator('[data-param="b"]')).toBeVisible();
+  await expect(page.locator('[data-readout="or"]')).toHaveText('6');
+});
+
+test('an uploaded image is processed in the page, and nothing is sent', async ({ page }) => {
+  const sent: string[] = [];
+  await page.goto('/resources/tools/image-processing/');
+  await expect(page.locator('[data-readout="im"]')).toHaveText('Built-in');
+  page.on('request', (request) => {
+    if (request.method() !== 'GET') sent.push(request.url());
+  });
+  await page.locator('[data-upload]').setInputFiles('public/assets/img/about-poster.jpg');
+  await expect(page.locator('[data-readout="im"]')).toHaveText('Yours');
+  await page.locator('[data-action="clear"]').click();
+  await expect(page.locator('[data-readout="im"]')).toHaveText('Built-in');
+  expect(sent).toEqual([]);
+});
+
+test('a file that is not an image is refused', async ({ page }) => {
+  await page.goto('/resources/tools/image-processing/');
+  await page.locator('[data-upload]').setInputFiles({ name: 'notes.txt', mimeType: 'text/plain', buffer: Buffer.from('hello') });
+  await expect(page.locator('[data-readout="im"]')).toHaveText('Not an image');
+});
+
+test('image filters improve quality, and controls follow the method', async ({ page }) => {
+  await page.goto('/resources/tools/image-processing/#st=0.20&d=frequency&t=butterworth&r=bandstop&n=3&c=0.200&b=0.015');
+  await page.reload();
+  await expect(page.locator('[data-readout="p1"]')).not.toHaveText('--');
+  const value = (key: string) => page.locator(`[data-readout="${key}"]`).innerText().then(Number);
+  expect(await value('p1')).toBeGreaterThan(await value('p0'));
+  await expect(page.locator('[data-param="k"]')).toBeHidden();
+  await page.goto('/resources/tools/image-processing/#d=kernel&k=custom&cu=1%202');
+  await page.reload();
+  await expect(page.locator('[data-param="cu"]')).toHaveAttribute('aria-invalid', 'true');
+  await expect(page.locator('[data-param="t"]')).toBeHidden();
+});
+
+test('the PID bench runs, takes a knock, and a pendulum left alone falls', async ({ page }) => {
+  await page.goto('/resources/tools/pid/');
+  await expect(page.locator('[data-readout="st"]')).toHaveText('Active');
+  await expect(page.locator('[data-lamp]')).toHaveClass(/on/);
+  await expect.poll(async () => Number(await page.locator('[data-readout="t"]').innerText())).toBeGreaterThan(0.5);
+  await page.locator('[data-action="knock"]').click();
+  await expect(page.locator('[data-readout="st"]')).toHaveText('Active');
+  await page.locator('[data-param="cl"]').uncheck();
+  await expect(page.locator('[data-lamp]')).not.toHaveClass(/on/);
+  await expect(page.locator('[data-readout="st"]')).toHaveText('Fallen', { timeout: 10_000 });
+  await page.locator('[data-action="restart"]').click();
+  await expect(page.locator('[data-readout="st"]')).toHaveText('Open loop');
+});
+
+test('a fallen pendulum restarts by clicking the screen', async ({ page }) => {
+  await page.goto('/resources/tools/pid/#cl=0');
+  await expect(page.locator('[data-readout="st"]')).toHaveText('Fallen', { timeout: 10_000 });
+  await page.locator('[data-screen]').click();
+  await expect(page.locator('[data-readout="st"]')).toHaveText('Open loop');
+});
+
+for (const [tool, control] of [['pid', '[data-action="restart"]'], ['image-processing', 'label.upload'], ['convolution', '[data-action="play"]']]) {
+  test(`${tool} keeps its main action in sight beside the screen`, async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 720 });
+    await page.goto(`/resources/tools/${tool}/`);
+    await page.locator('.panel').evaluate((panel) => panel.scrollIntoView({ block: 'start' }));
+    await expect(page.locator(control)).toBeInViewport();
+  });
+}
+
+test('choosing a system loads its tuning, and restarts it', async ({ page }) => {
+  await page.goto('/resources/tools/pid/');
+  await expect(page.locator('[data-readout="st"]')).toHaveText('Active');
+  await page.getByRole('button', { name: 'Heater' }).click();
+  await expect(page.locator('[data-param="kp"]')).toHaveValue('8');
+  await expect(page.locator('[data-readout="r"]')).toHaveText('50.0');
+  await expect.poll(() => page.locator('.readouts .unit').first().innerText()).toBe('°C');
+});
+
+test('reduced motion draws a finished PID run from a link', async ({ browser }) => {
+  const context = await browser.newContext({ reducedMotion: 'reduce' });
+  const page = await context.newPage();
+  await page.goto('/resources/tools/pid/#p=spring&s=0.80&kp=30.0&ki=15.0&kd=10.0');
+  await expect(page.locator('[data-readout="t"]')).toHaveText('25.0');
+  await expect(page.locator('[data-readout="y"]')).toHaveText('0.60');
+  await context.close();
+});
+
+test('a tone past Nyquist reports where it lands', async ({ page }) => {
+  await page.goto('/resources/tools/signal-processing/#w1=sine&f1=5000&l2=0.00&t=off');
+  await expect(page.locator('[data-readout="st"]')).toHaveText('Aliasing');
+  await expect(page.locator('[data-readout="h1"]')).toHaveText('3000');
+});
+
+test('hand-built filters show their controls, and dragging moves a pole', async ({ page }) => {
+  await page.goto('/resources/tools/signal-processing/');
+  await expect(page.locator('[data-param="p1r"]')).toBeHidden();
+  await page.goto('/resources/tools/signal-processing/#t=custom&p1r=0.50&p1a=2000&p2r=0.00&z1r=0.00&z2r=0.00');
+  await page.reload();
+  await expect(page.locator('[data-param="p1r"]')).toBeVisible();
+  await page.locator('[data-screen]').evaluate((canvas) => canvas.scrollIntoView({ block: 'end' }));
+  const box = (await page.locator('[data-screen]').boundingBox())!;
+  const half = { w: (box.width - 32) / 2, h: (box.height - 32) / 2 };
+  const left = 12 + half.w + 8 + 4;
+  const right = 12 + half.w + 8 + half.w - 4;
+  const top = 12 + half.h + 8 + 18;
+  const bottom = 12 + half.h + 8 + half.h - 4;
+  const scale = Math.min(right - left, bottom - top) / 2.6;
+  const cx = box.x + (left + right) / 2;
+  const cy = box.y + (top + bottom) / 2;
+  await page.mouse.move(cx, cy - 0.5 * scale);
+  await page.mouse.down();
+  await page.mouse.move(cx, cy - 0.8 * scale, { steps: 4 });
+  await page.mouse.up();
+  await expect.poll(async () => Number(await page.locator('[data-param="p1r"]').inputValue())).toBeGreaterThan(0.7);
+});
+
+test('the area of the output is the product of the areas', async ({ page }) => {
+  await page.goto('/resources/tools/convolution/#fs=rect&fw=2.0&gs=rect&gw=2.0&p=0.00');
+  await expect(page.locator('[data-readout="ay"]')).toHaveText('4');
 });
 
 test('controls write the permalink', async ({ page }) => {
   await page.goto('/resources/tools/step-response/');
-  await page.locator('[data-param="z"]').fill('1');
-  await expect.poll(() => page.evaluate(() => location.hash)).toContain('z=1.00');
+  await page.locator('[data-param="den"]').fill('1 4 4');
+  await expect.poll(() => page.evaluate(() => location.hash)).toContain('den=1%204%204');
   await expect(page.locator('[data-readout="os"]')).toHaveText('0.0');
   await expect(page.locator('[data-readout="tp"]')).toHaveText('none');
+  await expect(page.locator('[data-readout="st"]')).toHaveText('Stable');
+});
+
+test('step response refuses bad input and says why', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  await page.goto('/resources/tools/step-response/');
+  await page.locator('[data-param="den"]').fill('one two');
+  await expect(page.locator('[data-readout="st"]')).toHaveText('Check entry');
+  await expect(page.locator('[data-param="den"]')).toHaveAttribute('aria-invalid', 'true');
+  await page.locator('[data-param="den"]').fill('1 -5');
+  await expect(page.locator('[data-readout="st"]')).toHaveText('Unstable');
+  await expect(page.locator('[data-readout="fv"]')).toHaveText('--');
+  expect(errors).toEqual([]);
+});
+
+test('step response restores from a link, and teaching links set it', async ({ page }) => {
+  await page.goto('/resources/tools/step-response/#num=6&den=1%206%2011%206&T=0.50');
+  await expect(page.locator('[data-param="den"]')).toHaveValue('1 6 11 6');
+  await page.locator('.exhibit summary').nth(2).click();
+  await page.getByRole('link', { name: 'critical damping' }).click();
+  await expect(page.locator('[data-param="den"]')).toHaveValue('1 4 4');
+  await expect(page.locator('[data-readout="fv"]')).toHaveText('1');
+});
+
+test('dragging a pole rewrites the denominator, in conjugate pairs', async ({ page }) => {
+  await page.goto('/resources/tools/step-response/');
+  await expect(page.locator('[data-readout="st"]')).toHaveText('Stable');
+  await page.locator('[data-screen]').evaluate((canvas) => canvas.scrollIntoView({ block: 'end' }));
+  const box = (await page.locator('[data-screen]').boundingBox())!;
+  const { s } = regions(box.width, box.height, 1);
+  const cx = s.x + s.w / 2;
+  const cy = s.y + s.h / 2 + 7;
+  const scale = (Math.min(s.w, s.h - 16) / 2 - 8) / Math.max(1, 1.96 * 1.4);
+  await page.mouse.move(box.x + cx - 0.4 * scale, box.y + cy - 1.96 * scale);
+  await page.mouse.down();
+  await page.mouse.move(box.x + cx - 1.2 * scale, box.y + cy - 1.96 * scale, { steps: 4 });
+  await page.mouse.up();
+  const [lead, damping] = (await page.locator('[data-param="den"]').inputValue()).split(' ').map(Number);
+  expect(lead).toBe(1);
+  expect(damping).toBeGreaterThan(1.5);
+});
+
+test('the 3D switch changes the planes and is shared by link', async ({ page }) => {
+  await page.goto('/resources/tools/step-response/#v=1');
+  await expect(page.locator('[data-param="v"]')).toBeChecked();
+  const picture = () => page.locator('[data-screen]').evaluate((canvas: HTMLCanvasElement) => canvas.toDataURL());
+  const surface = await picture();
+  await page.locator('[data-param="v"]').uncheck();
+  expect(await picture()).not.toBe(surface);
 });
 
 test('reduced motion draws a static frame with real readouts', async ({ browser }) => {
   const context = await browser.newContext({ reducedMotion: 'reduce' });
   const page = await context.newPage();
-  await page.goto('/resources/tools/cascade/');
-  await expect(page.locator('[data-readout="n"]')).toContainText('/160');
-  const a = await read(page, 't');
+  await page.goto('/resources/tools/convolution/');
+  await expect(page.locator('[data-readout="y"]')).not.toHaveText('--');
+  const a = await read(page, 'y');
   await page.waitForTimeout(600);
-  expect(await read(page, 't')).toBe(a);
-  expect(a).toBe('50.0');
+  expect(await read(page, 'y')).toBe(a);
+  expect(await page.locator('[data-param="p"]').inputValue()).toBe('6');
   await context.close();
 });
 
@@ -470,7 +680,7 @@ test('electrons ride their ellipses on hover, on every orbit', async ({ page }) 
 test('tool pages use the poster and folding notes in printed type', async ({ page }) => {
   await page.goto('/resources/tools/step-response/');
   await expect(page.locator('.claim h1')).toBeVisible();
-  await expect(page.locator('.exhibit')).toHaveCount(2);
+  expect(await page.locator('.exhibit').count()).toBeGreaterThan(5);
   await expect(page.locator('.exhibit').first()).toHaveAttribute('open', '');
   expect(await page.locator('.exhibit-body p').first().evaluate((p) => getComputedStyle(p).fontFamily)).toContain('Libre Caslon Text');
 });
@@ -511,3 +721,36 @@ test('resources list what is live in the Gumroad store', async ({ page }) => {
     await expect(page.locator('a.row[href^="https://sebzuddas.gumroad.com/l/"]').first()).toBeVisible();
   }
 });
+
+test('only live repos reach the projects page', async ({ page, request }) => {
+  expect((await request.get('/projects/supplyway/')).status()).toBe(404);
+  await page.goto('/projects/');
+  await expect(page.getByText('SupplyWay')).toHaveCount(0);
+});
+
+test('the Falcon 9 teaching links choose the autopilot mode', async ({ page }) => {
+  await page.goto('/resources/tools/falcon-9/');
+  const links = await page.locator('.exhibit a[href^="#m="]').evaluateAll((all) => all.map((a) => a.getAttribute('href')!));
+  expect(links).toEqual(['#m=auto&x=7', '#m=assist&x=7']);
+  await page.goto(`/resources/tools/falcon-9/${links[1]}`);
+  await expect(page.locator('select[data-param="m"]')).toHaveValue('assist');
+});
+
+for (const tool of ['step-response', 'convolution', 'signal-processing', 'image-processing', 'pid']) {
+  test(`every teaching link on ${tool} sets up a working instrument`, async ({ browser }) => {
+    const context = await browser.newContext({ reducedMotion: 'reduce' });
+    const page = await context.newPage();
+    const errors: string[] = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    await page.goto(`/resources/tools/${tool}/`);
+    const links = await page.locator('.exhibit a[href^="#"][href*="="]').evaluateAll((all) => all.map((a) => a.getAttribute('href')!));
+    expect(links.length).toBeGreaterThan(8);
+    for (const link of links) {
+      await page.goto(`/resources/tools/${tool}/${link}`);
+      await page.reload();
+      await expect(page.locator('input[aria-invalid="true"]:visible'), link).toHaveCount(0);
+    }
+    expect(errors).toEqual([]);
+    await context.close();
+  });
+}

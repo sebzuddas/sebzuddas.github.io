@@ -6,6 +6,7 @@ import { site } from '../../../lib/site';
 import { sunburst, titleClass } from '../../../lib/providers/poster';
 import { tools } from '../../../tools/registry';
 import type { ToolMeta } from '../../../tools/types';
+import 'katex/dist/katex.min.css';
 
 export function getStaticPaths() {
   return tools.map((tool) => ({ params: { slug: tool.slug }, props: { tool } }));

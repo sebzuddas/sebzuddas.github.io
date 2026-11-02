@@ -9,8 +9,10 @@ export interface ToolContext {
   reduced: boolean;
   screen: HTMLCanvasElement;
   recorder: HTMLCanvasElement | null;
-  /** Called whenever a control, preset or the hash changes state. */
+  /** Called whenever state changes: with the control's key, 'preset', or null for the hash and set(). */
   onChange(fn: (key: string | null) => void): void;
+  /** Sets values from the view, as a control would, for tools that edit by pointer. */
+  set(values: ToolState): void;
   onAction(fn: (key: string) => void): void;
   /** Tokens changed, so colours must be read again. */
   onRetheme(fn: () => void): void;
@@ -72,7 +74,7 @@ export function createContext(root: HTMLElement, meta: ToolMeta): ToolContext {
     if (p.kind === 'hidden') continue;
     const input = root.querySelector<HTMLInputElement | HTMLSelectElement>(`[data-param="${p.key}"]`);
     if (p.kind === 'choice' && input) dropdowns.set(p.key, dropdown(input as HTMLSelectElement));
-    input?.addEventListener(p.kind === 'number' ? 'input' : 'change', () => {
+    input?.addEventListener(p.kind === 'number' || p.kind === 'text' ? 'input' : 'change', () => {
       if (p.kind === 'switch') state[p.key] = (input as HTMLInputElement).checked;
       else if (p.kind === 'number') state[p.key] = Number(input.value);
       else state[p.key] = input.value;
@@ -82,17 +84,22 @@ export function createContext(root: HTMLElement, meta: ToolMeta): ToolContext {
   root.querySelectorAll<HTMLButtonElement>('[data-preset]').forEach((button, i) => {
     button.addEventListener('click', () => {
       Object.assign(state, meta.presets?.[i]?.values);
-      changed(null);
+      changed('preset');
     });
   });
   root.querySelectorAll<HTMLButtonElement>('[data-action]').forEach((button) => {
     button.addEventListener('click', () => action.forEach((fn) => fn(button.dataset.action!)));
+  });
+  root.querySelectorAll<HTMLInputElement>('[data-toggle]').forEach((input) => {
+    input.addEventListener('change', () => action.forEach((fn) => fn(input.dataset.toggle!)));
   });
   if (owned) {
     addEventListener('hashchange', () => {
       if (location.hash.slice(1) === encode(meta.params, state)) return;
       Object.assign(state, decode(meta.params, location.hash));
       changed(null);
+      // "Try this" links sit below the panel, so bring it back to show the result.
+      root.scrollIntoView({ block: 'start', behavior: reduced ? 'auto' : 'smooth' });
     });
   }
   new MutationObserver(() => retheme.forEach((fn) => fn())).observe(root, {
@@ -111,6 +118,10 @@ export function createContext(root: HTMLElement, meta: ToolMeta): ToolContext {
     screen: root.querySelector<HTMLCanvasElement>('[data-screen]')!,
     recorder: root.querySelector<HTMLCanvasElement>('[data-recorder]'),
     onChange: (fn) => void change.push(fn),
+    set(values) {
+      Object.assign(state, values);
+      changed(null);
+    },
     onAction: (fn) => void action.push(fn),
     onRetheme: (fn) => void retheme.push(fn),
     setReadout(key, text) {

@@ -1,4 +1,5 @@
 ---
+import ToolActions from './ToolActions.astro';
 import type { ToolMeta } from '../tools/types';
 
 interface Props {
@@ -14,10 +15,12 @@ const controls = tool.params.filter((p) => p.kind !== 'hidden');
   data-tool={tool.slug}
   data-material={tool.material}
   data-permalink={permalink ? '' : undefined}
+  style={tool.screenAspect && `--screen-aspect: ${tool.screenAspect.wide}; --screen-aspect-narrow: ${tool.screenAspect.narrow}`}
 >
   <div class="legend">
     <span class="model">{tool.model}</span>
     {tool.lamp && <span class="lamp" data-lamp><i></i>{tool.lamp}</span>}
+    {tool.toggle && <label class="control switch"><span>{tool.toggle.label}</span><input type="checkbox" data-toggle={tool.toggle.key} /></label>}
   </div>
   <div class="glass main">
     <canvas data-screen role="img" aria-label={tool.screenLabel} data-clickable={tool.clickable ? '' : undefined}></canvas>
@@ -33,6 +36,7 @@ const controls = tool.params.filter((p) => p.kind !== 'hidden');
     </div>
   )}
   <div class="side">
+    {!tool.actionsLow && <ToolActions tool={tool} />}
     <dl class="readouts">
       {tool.readouts.map((r) => (
         <div>
@@ -55,6 +59,10 @@ const controls = tool.params.filter((p) => p.kind !== 'hidden');
         <label class="control"><span>{p.label}</span>
           <select data-param={p.key}>{p.options.map((o) => <option value={o.value}>{o.label}</option>)}</select>
         </label>
+      ) : p.kind === 'text' ? (
+        <label class="control"><span>{p.label}</span>
+          <input type="text" data-param={p.key} value={p.value} maxlength={p.maxLength} placeholder={p.placeholder} spellcheck="false" autocomplete="off" />
+        </label>
       ) : p.kind === 'number' ? (
         <label class="control">
           <span class="head"><span>{p.label}</span><output data-param-value={p.key}></output></span>
@@ -62,10 +70,10 @@ const controls = tool.params.filter((p) => p.kind !== 'hidden');
         </label>
       ) : null)}
     </div>
-    {(tool.actions || tool.presets) && (
+    {tool.actionsLow && <ToolActions tool={tool} />}
+    {tool.presets && (
       <div class="buttons">
-        {tool.actions?.map((a) => <button type="button" data-action={a.key}>{a.label}</button>)}
-        {tool.presets?.map((p) => <button type="button" data-preset>{p.label}</button>)}
+        {tool.presets.map((p) => <button type="button" data-preset>{p.label}</button>)}
       </div>
     )}
     {tool.keypads?.map((pad) => (

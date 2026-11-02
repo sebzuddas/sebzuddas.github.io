@@ -7,11 +7,18 @@ const params: ParamDef[] = [
   { key: 'l', label: 'L', kind: 'switch', value: true },
   { key: 's', label: 'S', kind: 'choice', value: 'x', options: [{ value: 'x', label: 'X' }, { value: 'y', label: 'Y' }] },
   { key: 'n', kind: 'hidden', value: 7 },
+  { key: 't', label: 'T', kind: 'text', value: '1 2', maxLength: 8 },
 ];
 
 describe('hash codec', () => {
+  it('round-trips text and refuses text past its limit', () => {
+    const state = { ...defaults(params), t: '1 -0.5' };
+    expect(decode(params, encode(params, state)).t).toBe('1 -0.5');
+    expect(decode(params, '#t=123456789').t).toBe('1 2');
+  });
+
   it('round-trips state exactly', () => {
-    const state = { a: 0.37, l: false, s: 'y', n: 42 };
+    const state = { a: 0.37, l: false, s: 'y', n: 42, t: '3 4' };
     expect(decode(params, encode(params, state))).toEqual(state);
   });
   it('keeps defaults for missing keys', () => {
