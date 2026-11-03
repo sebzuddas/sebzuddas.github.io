@@ -23,3 +23,5 @@ rebuild keeps it fresh. Posts not yet on Substack stay unlisted at `/posts/<slug
 add it to `movedToSubstack` in `src/lib/posts.ts`.
 
 Design rules and the hero's frozen specification are in `docs/plans/IMPLEMENTATION-REQUIREMENTS.md`.
+
+
