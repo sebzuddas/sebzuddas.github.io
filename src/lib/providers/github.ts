@@ -65,6 +65,17 @@ export function unproxied(repos: Pick<Repo, 'name' | 'homepage' | 'has_pages'>[]
   });
 }
 
+/**
+ * Where to check a site at build time. Sites under a path on this domain are GitHub Pages
+ * behind a rewrite, so they are read at the source: a build must not depend on the
+ * deploy it is replacing.
+ */
+export function pagesUrl(site: string): string {
+  const url = new URL(site);
+  if (url.hostname === DOMAIN && url.pathname !== '/') url.hostname = `${OWNER}.github.io`;
+  return url.href;
+}
+
 /** Whether a response's headers allow this domain to put the page in a frame. */
 export function allowsEmbedding(headers: Headers): boolean {
   if (headers.get('x-frame-options')) return false;
@@ -173,7 +184,10 @@ async function fetchRepos(): Promise<Fetched[]> {
   return Promise.all(repos.map(async (repo) => {
     const rendered = await readme(repo);
     const target = siteUrl(repo);
-    return { repo, rendered, found: target ? await probe(target, rendered ?? '') : undefined };
+    const checked = target && pagesUrl(target);
+    const found = checked ? await probe(checked, rendered ?? '') : undefined;
+    // A site read at GitHub Pages is still linked on this domain.
+    return { repo, rendered, found: found && checked !== target ? { ...found, site: target! } : found };
   }));
 }
 

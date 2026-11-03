@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { allowsEmbedding, cleanReadme, compileReadme, isListed, mirrorsReadme, siteUrl, titleOf, unproxied } from './github';
+import { allowsEmbedding, cleanReadme, compileReadme, isListed, mirrorsReadme, pagesUrl, siteUrl, titleOf, unproxied } from './github';
 
 const repo = { name: 'demo', html_url: 'https://github.com/sebzuddas/demo', default_branch: 'main' };
 
@@ -11,6 +11,14 @@ describe('siteUrl', () => {
   it('finds a Pages site with no homepage set, and reports no site otherwise', () => {
     expect(siteUrl({ name: 'x', homepage: null, has_pages: true })).toBe('https://sebzuddas.com/x/');
     expect(siteUrl({ name: 'x', homepage: '', has_pages: false })).toBeUndefined();
+  });
+});
+
+describe('pagesUrl', () => {
+  it('checks project sites at GitHub Pages, and anything else where it is', () => {
+    expect(pagesUrl('https://sebzuddas.com/grid_mpc/')).toBe('https://sebzuddas.github.io/grid_mpc/');
+    expect(pagesUrl('https://sebzuddas.com/')).toBe('https://sebzuddas.com/');
+    expect(pagesUrl('https://wiki.sebzuddas.com/')).toBe('https://wiki.sebzuddas.com/');
   });
 });
 
