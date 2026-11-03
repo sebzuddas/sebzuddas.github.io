@@ -1,6 +1,6 @@
 # sebzuddas.com
 
-Personal website, built with Astro and hosted on GitHub Pages. Requires Node 22.23.4 or later.
+Personal website, built with Astro and hosted on Vercel. Requires Node 22.23.4 or later.
 
     npm install
     npm run dev
@@ -21,5 +21,10 @@ GitHub read fails the build, which leaves the last good site live. Local builds 
 `/writing/` lists the Substack feed, read at build time through `src/lib/providers/writing.ts`. A daily
 rebuild keeps it fresh. Posts not yet on Substack stay unlisted at `/posts/<slug>/`. When one moves,
 add it to `movedToSubstack` in `src/lib/posts.ts`.
+
+Vercel builds and deploys every push to master. The `Checks` workflow runs the tests alongside, and
+triggers a daily rebuild through the `VERCEL_DEPLOY_HOOK` secret. Repos with a GitHub Pages site are
+served under this domain, such as `/grid_mpc/`, by rewrites in `vercel.json`. A new Pages repo needs a
+line there too, and the build warns when one is missing.
 
 Design rules and the hero's frozen specification are in `docs/plans/IMPLEMENTATION-REQUIREMENTS.md`.

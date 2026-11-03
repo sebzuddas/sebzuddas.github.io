@@ -50,6 +50,21 @@ export function siteUrl(repo: Pick<Repo, 'name' | 'homepage' | 'has_pages'>): st
   return repo.has_pages ? `https://${DOMAIN}/${repo.name}/` : undefined;
 }
 
+/**
+ * Repos whose site lives under a path on this domain with no rewrite to GitHub Pages
+ * in vercel.json. Without one, that path is a 404 on the live site.
+ */
+export function unproxied(repos: Pick<Repo, 'name' | 'homepage' | 'has_pages'>[], sources: string[]): string[] {
+  return repos.flatMap((repo) => {
+    const site = siteUrl(repo);
+    if (!site) return [];
+    const url = new URL(site);
+    const first = url.pathname.split('/')[1];
+    if (url.hostname !== DOMAIN || !first) return [];
+    return sources.includes(`/${first}/:path*`) ? [] : [repo.name];
+  });
+}
+
 /** Whether a response's headers allow this domain to put the page in a frame. */
 export function allowsEmbedding(headers: Headers): boolean {
   if (headers.get('x-frame-options')) return false;
@@ -167,7 +182,14 @@ export function isListed(repo: Pick<Repo, 'name' | 'fork' | 'archived'>): boolea
   return !repo.fork && !repo.archived && !config.hidden.includes(repo.name);
 }
 
+function warnUnproxied(fetched: Fetched[]) {
+  const { rewrites } = JSON.parse(readFileSync('vercel.json', 'utf8')) as { rewrites: { source: string }[] };
+  const missing = unproxied(fetched.filter(({ repo }) => isListed(repo)).map(({ repo }) => repo), rewrites.map((rule) => rule.source));
+  if (missing.length) console.warn(`These Pages sites need a rewrite in vercel.json, or they 404: ${missing.join(', ')}`);
+}
+
 function toProjects(fetched: Fetched[]): Project[] {
+  warnUnproxied(fetched);
   const overrides: Record<string, Partial<Project>> = config.overrides;
   const { pinned } = config;
   const listed = fetched.filter(({ repo }) => isListed(repo)).sort((a, b) => b.repo.pushed_at.localeCompare(a.repo.pushed_at));
