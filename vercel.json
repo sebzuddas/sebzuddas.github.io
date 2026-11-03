@@ -1,0 +1,62 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "trailingSlash": true,
+  "rewrites": [
+    {
+      "source": "/ACS233/:path*",
+      "destination": "https://sebzuddas.github.io/ACS233/:path*"
+    },
+    {
+      "source": "/ACS6116-Rocket-Landing-MPC/:path*",
+      "destination": "https://sebzuddas.github.io/ACS6116-Rocket-Landing-MPC/:path*"
+    },
+    {
+      "source": "/aqualunar/:path*",
+      "destination": "https://sebzuddas.github.io/aqualunar/:path*"
+    },
+    {
+      "source": "/axiometa-digital-twin/:path*",
+      "destination": "https://sebzuddas.github.io/axiometa-digital-twin/:path*"
+    },
+    {
+      "source": "/CityZen/:path*",
+      "destination": "https://sebzuddas.github.io/CityZen/:path*"
+    },
+    {
+      "source": "/eyh-biobuild/:path*",
+      "destination": "https://sebzuddas.github.io/eyh-biobuild/:path*"
+    },
+    {
+      "source": "/FCT_Python/:path*",
+      "destination": "https://sebzuddas.github.io/FCT_Python/:path*"
+    },
+    {
+      "source": "/graph_search/:path*",
+      "destination": "https://sebzuddas.github.io/graph_search/:path*"
+    },
+    {
+      "source": "/grid_mpc/:path*",
+      "destination": "https://sebzuddas.github.io/grid_mpc/:path*"
+    },
+    {
+      "source": "/haos_mpc/:path*",
+      "destination": "https://sebzuddas.github.io/haos_mpc/:path*"
+    },
+    {
+      "source": "/HITL/:path*",
+      "destination": "https://sebzuddas.github.io/HITL/:path*"
+    },
+    {
+      "source": "/house_optimisation/:path*",
+      "destination": "https://sebzuddas.github.io/house_optimisation/:path*"
+    },
+    {
+      "source": "/housingprofile/:path*",
+      "destination": "https://sebzuddas.github.io/housingprofile/:path*"
+    },
+    {
+      "source": "/predator-prey/:path*",
+      "destination": "https://sebzuddas.github.io/predator-prey/:path*"
+    }
+  ]
+}

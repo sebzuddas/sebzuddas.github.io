@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { allowsEmbedding, cleanReadme, compileReadme, isListed, mirrorsReadme, siteUrl, titleOf } from './github';
+import { allowsEmbedding, cleanReadme, compileReadme, isListed, linkFor, mirrorsReadme, pagesUrl, siteUrl, titleOf, unproxied } from './github';
 
 const repo = { name: 'demo', html_url: 'https://github.com/sebzuddas/demo', default_branch: 'main' };
 
@@ -11,6 +11,26 @@ describe('siteUrl', () => {
   it('finds a Pages site with no homepage set, and reports no site otherwise', () => {
     expect(siteUrl({ name: 'x', homepage: null, has_pages: true })).toBe('https://sebzuddas.com/x/');
     expect(siteUrl({ name: 'x', homepage: '', has_pages: false })).toBeUndefined();
+  });
+});
+
+describe('pagesUrl', () => {
+  it('checks project sites at GitHub Pages, and anything else where it is', () => {
+    expect(pagesUrl('https://sebzuddas.com/grid_mpc/')).toBe('https://sebzuddas.github.io/grid_mpc/');
+    expect(pagesUrl('https://sebzuddas.com/')).toBe('https://sebzuddas.com/');
+    expect(pagesUrl('https://wiki.sebzuddas.com/')).toBe('https://wiki.sebzuddas.com/');
+  });
+});
+
+describe('unproxied', () => {
+  it('names Pages sites on this domain that have no rewrite', () => {
+    const repos = [
+      { name: 'grid_mpc', homepage: null, has_pages: true },
+      { name: 'new_site', homepage: null, has_pages: true },
+      { name: 'wiki', homepage: 'http://wiki.sebzuddas.com/', has_pages: true },
+      { name: 'plain', homepage: null, has_pages: false },
+    ];
+    expect(unproxied(repos, ['/grid_mpc/:path*'])).toEqual(['new_site']);
   });
 });
 
@@ -78,6 +98,20 @@ describe('compileReadme', () => {
   });
 });
 
+describe('linkFor', () => {
+  const pages = { name: 'demo', homepage: null, has_pages: true };
+  const found = { site: 'https://sebzuddas.com/demo/', embed: true };
+
+  it('links a demo on this domain when it has a rewrite, and at github.io when it does not', () => {
+    expect(linkFor(pages, found, ['/demo/:path*'])).toEqual(found);
+    expect(linkFor(pages, found, [])).toEqual({ ...found, site: 'https://sebzuddas.github.io/demo/' });
+  });
+
+  it('links nothing when the site is a copy of the README', () => {
+    expect(linkFor(pages, { ...found, embed: false, copy: true }, ['/demo/:path*'])).toBeUndefined();
+  });
+});
+
 describe('isListed', () => {
   const repo = { name: 'demo', fork: false, archived: false };
   it('lists an ordinary repo', () => expect(isListed(repo)).toBe(true));
@@ -86,6 +120,7 @@ describe('isListed', () => {
     expect(isListed({ ...repo, fork: true })).toBe(false);
   });
   it('drops repos hidden by hand', () => expect(isListed({ ...repo, name: 'housingprofile' })).toBe(false));
+  it('drops the repo for this site', () => expect(isListed({ ...repo, name: 'sebzuddas.github.io' })).toBe(false));
 });
 
 describe('titleOf', () => {

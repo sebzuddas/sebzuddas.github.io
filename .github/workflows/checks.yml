@@ -1,4 +1,6 @@
-name: "Build and Deploy"
+name: "Checks"
+# Vercel builds and deploys every push to master by itself. This runs the
+# tests alongside, and triggers the daily rebuild.
 on:
   push:
     branches:
@@ -7,6 +9,7 @@ on:
       - .gitignore
       - README.md
       - LICENSE
+  pull_request:
 
   # Rebuilds daily so new Substack posts and GitHub repos appear.
   schedule:
@@ -17,24 +20,19 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
-# Allow one concurrent deployment
 concurrency:
-  group: "pages"
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build:
+  test:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -64,18 +62,13 @@ jobs:
           npx playwright install --with-deps chromium
           npm run test:e2e
 
-      - name: Upload site artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  rebuild:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
-    needs: build
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Trigger a Vercel deployment
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then echo "::error::Add the VERCEL_DEPLOY_HOOK secret to rebuild daily."; exit 1; fi
+          curl -fsS -X POST "$HOOK"

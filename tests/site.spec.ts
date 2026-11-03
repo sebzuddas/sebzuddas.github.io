@@ -416,12 +416,12 @@ test('projects come from GitHub, embedding a site or linking to it', async ({ pa
   await page.goto('/projects/predator-prey/');
   await expect(page.locator('.project-embed iframe')).toHaveAttribute('src', 'https://sebzuddas.com/predator-prey/');
   await expect(page.locator('.readme')).not.toBeEmpty();
-  await page.goto('/projects/grid_mpc/');
-  await expect(page.locator('.project-embed iframe')).toHaveCount(0);
-  await expect(page.locator('.project-links a').first()).toHaveAttribute('href', 'https://sebzuddas.com/grid_mpc/');
+  await expect(page.locator('main a[href="/projects/sebzuddas.github.io/"]')).toHaveCount(0);
+  // HITL's Pages site is GitHub's copy of its README, which the page already shows.
   await page.goto('/projects/hitl/');
   await expect(page.locator('.project-embed iframe')).toHaveCount(0);
-  await expect(page.locator('.project-links a').first()).toHaveAttribute('href', 'https://sebzuddas.com/HITL/');
+  await expect(page.locator('.project-links a')).toHaveCount(1);
+  await expect(page.locator('.project-links a')).toHaveAttribute('href', 'https://github.com/sebzuddas/HITL');
   await page.goto('/projects/exercism/');
   await expect(page.locator('.project-embed iframe')).toHaveCount(0);
   await expect(page.locator('.project-links a').first()).toHaveAttribute('href', /exercism\.org/);
@@ -432,6 +432,7 @@ test('projects come from GitHub, embedding a site or linking to it', async ({ pa
 
 test('README maths and diagrams are compiled in the page', async ({ page }) => {
   await page.goto('/projects/grid_mpc/');
+  await page.locator('.readme .katex').first().evaluate((maths) => { const section = maths.closest('details'); if (section) section.open = true; });
   await expect(page.locator('.readme .katex').first()).toBeVisible();
   await expect(page.locator('.readme math-renderer')).toHaveCount(0);
   await expect(page.locator('.readme')).not.toContainText('$$');
@@ -587,10 +588,10 @@ test('README sections fold, and links open them', async ({ page }) => {
 });
 
 test('a project with no README still gets a poster with its links', async ({ page }) => {
-  await page.goto('/projects/optimisation/');
+  await page.goto('/projects/exercism/');
   await expect(page.locator('.claim h1')).toBeVisible();
   await expect(page.locator('.readme')).toHaveCount(0);
-  await expect(page.locator('.project-links a.btn')).toHaveCount(1);
+  await expect(page.locator('.project-links a.btn')).toHaveCount(2);
 });
 
 test('signed GitHub media never reaches the page', async ({ page }) => {
@@ -688,7 +689,7 @@ test('tool pages use the poster and folding notes in printed type', async ({ pag
 test('long titles stay clear of the plate', async ({ page }) => {
   for (const width of [390, 1440]) {
     await page.setViewportSize({ width, height: 900 });
-    for (const slug of ['house_optimisation', 'fct_python', 'haos_mpc']) {
+    for (const slug of ['chrome-text-highlighter', 'fct_python', 'haos_mpc']) {
       await page.goto(`/projects/${slug}/`);
       await expect(page.locator('.claim h1')).toBeVisible();
       const overlap = await page.evaluate(() => {
