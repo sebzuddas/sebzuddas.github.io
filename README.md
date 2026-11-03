@@ -28,3 +28,5 @@ served under this domain, such as `/grid_mpc/`, by rewrites in `vercel.json`. A 
 line there too, and the build warns when one is missing.
 
 Design rules and the hero's frozen specification are in `docs/plans/IMPLEMENTATION-REQUIREMENTS.md`.
+
+
