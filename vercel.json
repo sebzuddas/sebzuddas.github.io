@@ -3,56 +3,112 @@
   "trailingSlash": true,
   "rewrites": [
     {
+      "source": "/ACS233/",
+      "destination": "https://sebzuddas.github.io/ACS233/"
+    },
+    {
       "source": "/ACS233/:path*",
       "destination": "https://sebzuddas.github.io/ACS233/:path*"
+    },
+    {
+      "source": "/ACS6116-Rocket-Landing-MPC/",
+      "destination": "https://sebzuddas.github.io/ACS6116-Rocket-Landing-MPC/"
     },
     {
       "source": "/ACS6116-Rocket-Landing-MPC/:path*",
       "destination": "https://sebzuddas.github.io/ACS6116-Rocket-Landing-MPC/:path*"
     },
     {
+      "source": "/aqualunar/",
+      "destination": "https://sebzuddas.github.io/aqualunar/"
+    },
+    {
       "source": "/aqualunar/:path*",
       "destination": "https://sebzuddas.github.io/aqualunar/:path*"
+    },
+    {
+      "source": "/axiometa-digital-twin/",
+      "destination": "https://sebzuddas.github.io/axiometa-digital-twin/"
     },
     {
       "source": "/axiometa-digital-twin/:path*",
       "destination": "https://sebzuddas.github.io/axiometa-digital-twin/:path*"
     },
     {
+      "source": "/CityZen/",
+      "destination": "https://sebzuddas.github.io/CityZen/"
+    },
+    {
       "source": "/CityZen/:path*",
       "destination": "https://sebzuddas.github.io/CityZen/:path*"
+    },
+    {
+      "source": "/eyh-biobuild/",
+      "destination": "https://sebzuddas.github.io/eyh-biobuild/"
     },
     {
       "source": "/eyh-biobuild/:path*",
       "destination": "https://sebzuddas.github.io/eyh-biobuild/:path*"
     },
     {
+      "source": "/FCT_Python/",
+      "destination": "https://sebzuddas.github.io/FCT_Python/"
+    },
+    {
       "source": "/FCT_Python/:path*",
       "destination": "https://sebzuddas.github.io/FCT_Python/:path*"
+    },
+    {
+      "source": "/graph_search/",
+      "destination": "https://sebzuddas.github.io/graph_search/"
     },
     {
       "source": "/graph_search/:path*",
       "destination": "https://sebzuddas.github.io/graph_search/:path*"
     },
     {
+      "source": "/grid_mpc/",
+      "destination": "https://sebzuddas.github.io/grid_mpc/"
+    },
+    {
       "source": "/grid_mpc/:path*",
       "destination": "https://sebzuddas.github.io/grid_mpc/:path*"
+    },
+    {
+      "source": "/haos_mpc/",
+      "destination": "https://sebzuddas.github.io/haos_mpc/"
     },
     {
       "source": "/haos_mpc/:path*",
       "destination": "https://sebzuddas.github.io/haos_mpc/:path*"
     },
     {
+      "source": "/HITL/",
+      "destination": "https://sebzuddas.github.io/HITL/"
+    },
+    {
       "source": "/HITL/:path*",
       "destination": "https://sebzuddas.github.io/HITL/:path*"
+    },
+    {
+      "source": "/house_optimisation/",
+      "destination": "https://sebzuddas.github.io/house_optimisation/"
     },
     {
       "source": "/house_optimisation/:path*",
       "destination": "https://sebzuddas.github.io/house_optimisation/:path*"
     },
     {
+      "source": "/housingprofile/",
+      "destination": "https://sebzuddas.github.io/housingprofile/"
+    },
+    {
       "source": "/housingprofile/:path*",
       "destination": "https://sebzuddas.github.io/housingprofile/:path*"
+    },
+    {
+      "source": "/predator-prey/",
+      "destination": "https://sebzuddas.github.io/predator-prey/"
     },
     {
       "source": "/predator-prey/:path*",
