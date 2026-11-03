@@ -1,0 +1,19 @@
+---
+import Atom from './Atom.astro';
+interface Props {
+  title: string;
+  summary?: string;
+  method?: string;
+  href?: string;
+}
+const { title, summary, method, href } = Astro.props;
+const Tag = href ? 'a' : 'div';
+---
+<li>
+  <Tag class="row" href={href}>
+    <span class="n"><Atom /></span>
+    <h3>{title}</h3>
+    <span class="tag">{method}</span>
+    {summary && <p>{summary}</p>}
+  </Tag>
+</li>

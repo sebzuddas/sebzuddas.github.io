@@ -1,0 +1,9 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ToolRow from '../../../components/ToolRow.astro';
+import { tools } from '../../../tools/registry';
+---
+<Base title="Tools" description="Simulations and calculators for systems and control engineering. Free to use, no sign-up.">
+  <div class="prose"><h1>Tools</h1><p class="lede">Simulations and calculators. Every setting lives in the page address, so a link shares exactly what you see.</p></div>
+  <ol class="rows">{tools.map((tool) => <ToolRow tool={tool} />)}</ol>
+</Base>

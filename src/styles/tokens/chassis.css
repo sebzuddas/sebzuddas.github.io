@@ -1,0 +1,23 @@
+/* The shipped identity: an atomic-age sign at night, and the same sign by day. */
+:root {
+  color-scheme: dark;
+  --bg: #0F2A2E; --surface: #173A3F; --ink: #F5E9CF; --muted: #BDB9A2; --border: #2F5A5C;
+  --accent: #F4B73A; --accent-ink: #F8C95F; --on-accent: #0F2A2E;
+  --accent-2: #F26B4E; --accent-3: #5CC4B8; --electron: #6FE8FF;
+  --poster: #145A60; --poster-ray: #1A6A70; --poster-ink: #FBF0D8; --poster-accent: #FFC94D;
+  --plate: #F5E9CF; --plate-ink: #16302F; --plate-muted: #4F5A4E; --screw: #B9842B;
+  --chrome: linear-gradient(180deg, #F4F1E8 0%, #A9B2B0 42%, #6F7B7B 52%, #D7DAD2 100%);
+  --pattern-opacity: .09;
+  --tex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
+  /* Tabletop laminate: boomerangs and four-point stars. Used as a mask, so it takes any colour. */
+  --laminate: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='300'%3E%3Cpath d='M40 70c22-30 58-40 92-30-30 2-52 16-60 40 10-4 22-2 32 6-28-6-48-2-64-16z'/%3E%3Cpath d='M300 190c-20 30-58 44-96 34 32-2 56-16 66-42-12 6-24 4-36-4 30 6 50 2 66 12z'/%3E%3Cpath d='M250 40l5 24 24 5-24 5-5 24-5-24-24-5 24-5z'/%3E%3Cpath d='M70 200l4 19 19 4-19 4-4 19-4-19-19-4 19-4z'/%3E%3Ccircle cx='180' cy='130' r='4'/%3E%3Ccircle cx='330' cy='80' r='3'/%3E%3Ccircle cx='24' cy='150' r='3'/%3E%3Ccircle cx='150' cy='270' r='4'/%3E%3C/svg%3E");
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #F3E8CF; --surface: #EADBB9; --ink: #16302F; --muted: #52584B; --border: #C9B68C;
+  --accent: #C93F25; --accent-ink: #A7301A; --on-accent: #FFF6E2;
+  --accent-2: #17737A; --accent-3: #B97C10; --electron: #12C8F4;
+  --poster: #146A71; --poster-ray: #1B7980; --poster-ink: #FFF6E2; --poster-accent: #FFD25E;
+  --plate: #FFF6E2; --plate-ink: #16302F; --plate-muted: #52584B; --screw: #B9842B;
+  --pattern-opacity: .1;
+}

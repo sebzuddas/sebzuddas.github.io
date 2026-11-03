@@ -1,0 +1,6 @@
+---
+import { formatNotes } from '../lib/providers/poster';
+
+const html = formatNotes(await Astro.slots.render('default'));
+---
+<article class="prose readme" set:html={html} />

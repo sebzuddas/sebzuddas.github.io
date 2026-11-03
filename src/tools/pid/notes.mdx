@@ -1,0 +1,91 @@
+import Eq from '../../components/Eq.astro';
+
+## Why feedback
+
+You want a room at 21 degrees. You could work out exactly how much heat it needs and switch that on. But the door opens, the sun comes out, and your sums were slightly wrong. So you do what a thermostat does: measure the temperature, compare it with what you want, and act on the difference.
+
+That is feedback. It works without a perfect model, and it corrects for things nobody predicted. It can also make a system unstable if pushed too hard, which is why controllers need tuning.
+
+The PID controller is the most widely used feedback controller in the world. It is in thermostats, cruise control, drones, chemical plants and hard drives. This bench lets you tune one on three different systems.
+
+The top of the screen shows the system. The plot below shows the target, what was measured, and what the controller is doing about it. Press **Knock it** to disturb the system, and watch it recover.
+
+## The three terms
+
+The controller looks at the error, the gap between target and measurement, and adds three responses to it:
+
+<Eq tex="u(t) = K_p\, e(t) + K_i \int_0^t e(\tau)\, d\tau + K_d\, \frac{de(t)}{dt}" />
+
+Think of them as present, past and future.
+
+**Proportional** acts on the error now: the further off you are, the harder you push. It does most of the work. Alone it usually settles short of the target, because a spring or a leaking room needs a steady push to hold position, and a steady push needs a steady error.
+
+**Integral** acts on the accumulated past. As long as any error remains, it keeps building, so it removes that steady offset. Too much of it makes the system slow and oscillatory.
+
+**Derivative** acts on where things are heading. If the error is shrinking fast, it eases off before arriving, like braking before a junction. It adds damping, but it amplifies noise.
+
+Try this on the spring: [proportional alone](#p=spring&s=0.80&kp=30.0&ki=0.0&kd=0.0) rings, and settles short of the target. [Add derivative](#p=spring&s=0.80&kp=30.0&ki=0.0&kd=10.0) and the ringing goes, but the offset stays. [Add integral](#p=spring&s=0.80&kp=30.0&ki=15.0&kd=10.0) and it lands on target.
+
+## The heater
+
+A heater is a slow system, and it has lag: the element warms up first, the room follows, and the sensor here reads 1.5 seconds behind that. So heat you add now keeps arriving after you stop adding it. If you wait until the room reaches the target, you have already overshot.
+
+The output is also one-sided. A heater can only add heat, and cooling down is left to the walls. That makes overshoot expensive, because there is nothing to remove it with.
+
+Try this: [the tuned heater](#p=heater&s=0.50&kp=8.0&ki=0.8&kd=6.0), then [too much gain and no derivative](#p=heater&s=0.50&kp=60.0&ki=2.0&kd=0.0). The output bangs between 0 and 100% and the temperature hunts around the target.
+
+## The inverted pendulum
+
+Balancing a broom on your hand is a different kind of problem. A heater or spring returns to rest by itself if you stop controlling it. A pendulum balanced upright does the opposite: any small lean grows exponentially, and it falls within a couple of seconds.
+
+So this system is unstable. Control is what makes it stand at all. Turn the loop off, and it falls.
+
+The controller measures the angle and pushes the cart underneath the lean. Derivative is essential here, because by the time the angle is large it is too late.
+
+Try this: [the tuned pendulum](#p=pendulum&s=0.50&kp=80.0&ki=10.0&kd=12.0), then press Knock it a few times. Try [without derivative](#p=pendulum&s=0.50&kp=80.0&ki=10.0&kd=0.0): the swings grow until it falls. And [with the loop open](#p=pendulum&s=0.50&cl=0), it simply falls.
+
+Watch the numbers on the track. The pole stays up, but the cart slowly wanders. The controller only knows the angle, so it has no reason to stay in one place. A single PID loop cannot hold both. Real balancing systems use a second loop on position, or a state-space controller that measures both at once.
+
+## Tuning by hand
+
+A reliable recipe for a stable system:
+
+1. Set all three gains to zero.
+2. Raise proportional until the system responds briskly, and just begins to oscillate.
+3. Add derivative until the oscillation is damped.
+4. Add integral slowly, until the offset goes away in a reasonable time.
+5. Back everything off a little. A real system changes as it ages.
+
+A more formal version is the Ziegler-Nichols method from 1942. Raise proportional alone until the system holds a steady oscillation. Call that gain <Eq inline tex="K_u" /> and its period <Eq inline tex="T_u" />. Then use:
+
+<Eq tex="K_p = 0.6\,K_u, \qquad K_i = \frac{1.2\,K_u}{T_u}, \qquad K_d = 0.075\,K_u T_u" />
+
+It gives a starting point, usually an aggressive one with clear overshoot, and not a finished answer. An unstable plant like the pendulum needs the proportional and derivative terms from the start, so this recipe does not apply.
+
+## Windup
+
+Outputs have limits. A heater has a maximum power and a motor a maximum torque. While the output is pinned at its limit, the error stays large, and the integral keeps growing with nothing to show for it. When the system finally arrives, the integral is huge, and it takes a long overshoot to unwind.
+
+The fix is anti-windup: stop integrating while the output is at its limit.
+
+Try this: take [a big heater step with anti-windup on](#p=heater&s=0.90&kp=8.0&ki=1.5&kd=6.0), then [the same step with it off](#p=heater&s=0.90&kp=8.0&ki=1.5&kd=6.0&aw=0). The temperature runs well past the target, even though the gains are identical.
+
+## Details that matter in practice
+
+**Derivative kick.** If you differentiate the error, a sudden change of target makes a sudden spike in the output. So this controller differentiates only the measurement. The target can jump and the derivative term does not react.
+
+**Derivative noise.** Differentiating amplifies noise, because noise changes fast. Real controllers filter the derivative, and this one uses a short filter of 0.03 seconds. Many industrial loops leave the D term out altogether for this reason.
+
+**Delay.** Delay is what limits how hard you can push. If it takes time for a change to show up in the measurement, a high gain ends up acting on old news. This is part of why the heater cannot be tuned as aggressively as the spring.
+
+**A simple controller for simple systems.** PID works best on systems that behave roughly like first or second order ones. For systems with many inputs and outputs, or strict limits, engineers reach for tools like model predictive control, which is what lands the [Falcon 9 tool](/resources/tools/falcon-9/).
+
+## What this leaves out
+
+The plants are small textbook models with round-number values, and the room has no weather and no people in it. Knocks are sudden, and there is no measurement noise.
+
+The controller runs 100 times a second, on a perfect measurement. A real one is limited by its sensor, and by its own sample rate. The gains suit these models only, and the Target control spans a different range on each: 20 to 80 °C, ±1 m, or ±6° of lean.
+
+The pendulum follows the full nonlinear equations, and it counts as fallen past about 70°.
+
+The test suite checks each plant without control against its known behaviour, such as the spring's natural frequency and the pendulum's rate of falling. With control, it confirms each default tuning holds its target through knocks, that proportional alone leaves the predicted offset, that integral removes it, that derivative reduces overshoot, and that anti-windup does what it claims.

@@ -1,0 +1,10 @@
+---
+import Atom from './Atom.astro';
+
+interface Props {
+  href: string;
+  quiet?: boolean;
+}
+const { href, quiet = false } = Astro.props;
+---
+<a class:list={['btn', { quiet }]} href={href}><Atom /><span><slot /></span></a>

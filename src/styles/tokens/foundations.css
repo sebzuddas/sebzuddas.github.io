@@ -1,0 +1,15 @@
+@font-face { font-family: "DSEG7"; src: url("/fonts/DSEG7Classic-Regular.woff2") format("woff2"); font-display: swap; }
+:root {
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px; --s-6: 40px; --s-7: 64px; --s-8: 104px;
+  --gutter: 16px; --col-gap: 24px; --rule: 1px; --radius: 999px; --round: 22px;
+  --t-fast: 120ms; --ease: cubic-bezier(.2,.6,.2,1);
+  --tempo: 10s;
+  --measure: 40rem;
+  --f-display: "Jost Variable", "Century Gothic", Futura, sans-serif;
+  --f-script: "Yellowtail", "Brush Script MT", cursive;
+  --f-text: "Libre Caslon Text", "Big Caslon", Georgia, serif;
+  --f-mono: "Courier Prime", "Courier New", monospace;
+  --f-seg: "DSEG7", var(--f-mono);
+}
+@media (min-width: 760px) { :root { --gutter: 32px; --col-gap: 32px; } }
+@media (min-width: 1200px) { :root { --gutter: 48px; --col-gap: 40px; } }

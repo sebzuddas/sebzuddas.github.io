@@ -1,0 +1,32 @@
+---
+import Atom from './Atom.astro';
+import { site } from '../lib/site';
+
+const path = Astro.url.pathname;
+const items = [
+  { label: 'Projects', href: '/projects/' },
+  { label: 'Resources', href: '/resources/' },
+  { label: 'Writing', href: '/writing/' },
+  { label: 'About', href: '/about/' },
+];
+---
+<header class="bar">
+  <a class="name" href="/"><Atom />{site.name}</a>
+  <nav aria-label="Main">
+    <ul>
+      {items.map((i) => (
+        <li><a href={i.href} aria-current={path.startsWith(i.href) ? 'page' : undefined}>{i.label}</a></li>
+      ))}
+      <li><a href={site.wiki}>Wiki <span class="ext" aria-hidden="true">&nearr;</span></a></li>
+      <li><button class="toggle" type="button" data-theme-toggle aria-label="Switch between light and dark">Light / dark</button></li>
+    </ul>
+  </nav>
+</header>
+<script>
+  document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+    const root = document.documentElement;
+    const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch {}
+  });
+</script>

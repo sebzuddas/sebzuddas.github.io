@@ -1,0 +1,38 @@
+---
+import { movedToSubstack } from '../lib/posts';
+import { site } from '../lib/site';
+
+// GitHub Pages cannot send a 301, so old URLs get a meta refresh with a canonical.
+export function getStaticPaths() {
+  const tags = ['goals', 'personal-development', 'systems', 'values', 'blog', 'ai', 'society', 'environment', 'plastics', 'manufacturing', 'philosophy', 'future'];
+  const categories = ['personal-development', 'systems', 'philosophy'];
+  const map: Record<string, string> = {
+    wiki: site.wiki,
+    shop: site.gumroad,
+    subscribe: site.substack,
+    archives: '/writing/',
+    posts: '/writing/',
+    page2: '/writing/',
+    tags: '/writing/',
+    categories: '/writing/',
+    ...Object.fromEntries(Object.entries(movedToSubstack).map(([slug, url]) => [`posts/${slug}`, url])),
+    ...Object.fromEntries(tags.map((t) => [`tags/${t}`, '/writing/'])),
+    ...Object.fromEntries(categories.map((c) => [`categories/${c}`, '/writing/'])),
+  };
+  return Object.entries(map).map(([legacy, to]) => ({ params: { legacy }, props: { to } }));
+}
+
+const { to } = Astro.props as { to: string };
+const target = new URL(to, site.url).href;
+---
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <title>Moved</title>
+  <meta name="robots" content="noindex" />
+  <link rel="canonical" href={target} />
+  <meta http-equiv="refresh" content={`0; url=${to}`} />
+</head>
+<body><p>This page has moved to <a href={to}>{target}</a>.</p></body>
+</html>

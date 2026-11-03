@@ -1,0 +1,31 @@
+---
+import LaunchLink from './LaunchLink.astro';
+import { site } from '../lib/site';
+---
+<section class="signup" aria-label="Subscribe" id="subscribe">
+  <p>New tools and longer pieces are released by email.</p>
+  <LaunchLink href={site.substack}>Subscribe by email</LaunchLink>
+  <div class="signup-form" data-embed={`${site.substack}/embed`}><div></div></div>
+</section>
+<script>
+  // Substack has no subscribe API, so its own form unfolds here, and only loads on request.
+  const strip = document.querySelector('.signup');
+  const button = strip?.querySelector<HTMLAnchorElement>('.btn');
+  const form = strip?.querySelector<HTMLElement>('.signup-form');
+  if (strip && button && form) {
+    button.setAttribute('aria-expanded', 'false');
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      if (!form.querySelector('iframe')) {
+        const frame = document.createElement('iframe');
+        frame.src = form.dataset.embed!;
+        frame.title = 'Subscribe on Substack';
+        frame.setAttribute('scrolling', 'no');
+        frame.addEventListener('load', () => frame.focus());
+        form.firstElementChild!.append(frame);
+      }
+      const open = strip.classList.toggle('open');
+      button.setAttribute('aria-expanded', String(open));
+    });
+  }
+</script>

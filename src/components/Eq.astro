@@ -1,0 +1,11 @@
+---
+import katex from 'katex';
+
+interface Props {
+  tex: string;
+  inline?: boolean;
+}
+const { tex, inline = false } = Astro.props;
+const html = katex.renderToString(tex, { displayMode: !inline, throwOnError: true, output: 'html' });
+---
+{inline ? <span set:html={html} /> : <div class="equation" set:html={html} />}

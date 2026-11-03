@@ -2,12 +2,15 @@ name: "Build and Deploy"
 on:
   push:
     branches:
-      - main
       - master
     paths-ignore:
       - .gitignore
       - README.md
       - LICENSE
+
+  # Rebuilds daily so new Substack posts and GitHub repos appear.
+  schedule:
+    - cron: "0 6 * * *"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -29,37 +32,42 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          # submodules: true
-          # If using the 'assets' git submodule from Chirpy Starter, uncomment above
-          # (See: https://github.com/cotes2020/chirpy-starter/tree/main/assets)
 
       - name: Setup Pages
-        id: pages
         uses: actions/configure-pages@v4
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          ruby-version: 3.3
-          bundler-cache: true
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Test models
+        run: npm test
+
+      - name: Check the token rule
+        run: npm run lint:tokens
 
       - name: Build site
-        run: bundle exec jekyll b -d "_site${{ steps.pages.outputs.base_path }}"
+        run: npm run build
         env:
-          JEKYLL_ENV: "production"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Test site
+      - name: Check the instrument budget
+        run: npm run check:bundle
+
+      - name: Acceptance tests
         run: |
-          bundle exec htmlproofer _site \
-            \-\-disable-external \
-            \-\-ignore-urls "/^http:\/\/127.0.0.1/,/^http:\/\/0.0.0.0/,/^http:\/\/localhost/"
+          npx playwright install --with-deps chromium
+          npm run test:e2e
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "_site${{ steps.pages.outputs.base_path }}"
+          path: dist
 
   deploy:
     environment:

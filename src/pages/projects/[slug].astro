@@ -1,0 +1,65 @@
+---
+import Base from '../../layouts/Base.astro';
+import LaunchLink from '../../components/LaunchLink.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { sunburst, titleClass } from '../../lib/providers/poster';
+import 'katex/dist/katex.min.css';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.filter((p) => p.data.href).map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+
+const { project } = Astro.props as { project: CollectionEntry<'projects'> };
+const { title, summary, method, pushed, site, embed, repo, readme, stats } = project.data;
+const rays = sunburst(project.id);
+const updated = pushed && new Date(pushed).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+const spec = [
+  ['Language', method],
+  ['Updated', updated],
+  ['Sections', stats?.sections],
+  ['Figures', stats?.figures],
+  ['Equations', stats?.equations],
+  ['Diagrams', stats?.diagrams],
+].filter(([, value]) => value);
+---
+<Base title={title} description={summary ?? `${title}, a project by Seb Zuddas.`}>
+  <section class="claim" style={`--ray-x: ${rays.x}%; --ray-y: ${rays.y}%; --ray-step: ${rays.step}deg`}>
+    <div class="cover">
+      <div>
+        <h1 class={titleClass(title)}>{title}</h1>
+        {summary && <p class="standfirst">{summary}</p>}
+        <p class="project-links">
+          {site && <LaunchLink href={site}>Open the site</LaunchLink>}
+          {repo && <LaunchLink href={repo} quiet={!!site}>Source on GitHub</LaunchLink>}
+        </p>
+      </div>
+      {spec.length > 0 && (
+        <aside class="plate">
+          <dl class="spec">{spec.map(([name, value]) => <><dt>{name}</dt><dd>{value}</dd></>)}</dl>
+        </aside>
+      )}
+    </div>
+  </section>
+  {site && embed && (
+    <figure class="project-embed">
+      <iframe src={site} title={`${title}, live site`} loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>
+    </figure>
+  )}
+  {readme && <article class="prose readme" set:html={readme} />}
+</Base>
+<script>
+  import { renderDiagrams } from '../../lib/diagrams';
+
+  function openTarget() {
+    const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (!target) return;
+    const section = target.closest('details');
+    if (section) section.open = true;
+    target.scrollIntoView();
+  }
+
+  openTarget();
+  addEventListener('hashchange', openTarget);
+  renderDiagrams();
+</script>

@@ -1,0 +1,74 @@
+---
+import Base from '../layouts/Base.astro';
+import ProjectRow from '../components/ProjectRow.astro';
+import SignupStrip from '../components/SignupStrip.astro';
+import ToolPanel from '../components/ToolPanel.astro';
+import { getCollection } from 'astro:content';
+import { site } from '../lib/site';
+import { getTool } from '../tools/registry';
+
+const hero = getTool('falcon-9');
+const projects = (await getCollection('projects')).filter((p) => p.data.pin !== undefined).sort((a, b) => a.data.pin! - b.data.pin!).slice(0, 3);
+const ways = [
+  { t: 'Tools', d: 'Play with a system.', href: '/resources/tools/' },
+  { t: 'Projects', d: 'Projects you can read through.', href: '/projects/' },
+  { t: 'Resources', d: 'Tools, lists and guides.', href: '/resources/' },
+  { t: 'Wiki', d: 'The notes behind them.', href: site.wiki, ext: true },
+  { t: 'Writing', d: 'On Substack.', href: '/writing/' },
+];
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.fullName,
+  alternateName: site.name,
+  url: site.url,
+  jobTitle: site.role,
+  sameAs: site.links.map((l) => l.href),
+};
+---
+<Base schema={schema}>
+  <section class="claim" aria-labelledby="claim-h">
+    <div class="cover">
+      <div>
+        <h1 id="claim-h"><span class="l1">Building resilience.</span> <span class="l2">Thinking in systems.</span></h1>
+        <p class="standfirst">{site.description}</p>
+      </div>
+      <dl class="plate screws spec">
+        <dt>Unit</dt><dd>{site.name}</dd>
+        <dt>Site</dt><dd>{site.location}</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section id="instrument" aria-labelledby="fig-h">
+    <div class="fig-head">
+      <h2 id="fig-h">{hero.title}</h2>
+      <a class="label" href={`/resources/tools/${hero.slug}/`}>Open full instrument &rarr;</a>
+    </div>
+    <ToolPanel tool={hero} />
+    <p class="fig-note">{hero.summary}</p>
+  </section>
+
+  <nav class="ways" aria-labelledby="ways-h">
+    <div class="sec-head"><h2 id="ways-h">Ways in</h2><span class="label">{String(ways.length).padStart(2, '0')}</span></div>
+    <ol>
+      {ways.map((w, i) => (
+        <li><a href={w.href}>
+          <span class="n">{String(i + 1).padStart(2, '0')}</span>
+          <span class="t">{w.t}</span>
+          <span class="go" aria-hidden="true" set:html={w.ext ? '&nearr;' : '&rarr;'} />
+          <span class="d">{w.d}</span>
+        </a></li>
+      ))}
+    </ol>
+  </nav>
+
+  <section aria-labelledby="proj-h">
+    <div class="sec-head"><h2 id="proj-h">Projects</h2><a class="label" href="/projects/">All projects &rarr;</a></div>
+    <ol class="rows">
+      {projects.map((p) => <ProjectRow {...p.data} />)}
+    </ol>
+  </section>
+
+  <SignupStrip />
+</Base>

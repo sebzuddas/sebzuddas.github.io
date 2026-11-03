@@ -1,0 +1,8 @@
+/* A paper sheet on a pen plotter. */
+[data-material="plotter"] {
+  --screen-bg: #F3EEDF; --screen-ink: #1F3F66; --screen-dim: #8E9AA0; --screen-faint: #D8D2BF;
+  --screen-accent: #A63A24; --screen-alert: #A63A24;
+  --panel-bg: #6B2A1E; --panel-ink: #F5E6D0; --panel-muted: #E0C3AB; --panel-border: #8F4632; --lamp: #E6B65A;
+  --bezel: #471A12;
+  --scan: 0;
+}

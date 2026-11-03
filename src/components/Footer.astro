@@ -1,0 +1,18 @@
+---
+import { site } from '../lib/site';
+---
+<footer class="foot">
+  <div class="plate screws">
+    <dl class="tblock">
+      <div><dt>Name</dt><dd>{site.name}</dd></div>
+      <div><dt>Location</dt><dd>{site.location}</dd></div>
+    </dl>
+  </div>
+  <ul class="legal">
+    <li>&copy; {new Date().getFullYear()} {site.fullName}</li>
+    {site.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+    <li><a href={site.substack}>Substack</a></li>
+    <li><a href="/privacy/">Privacy</a></li>
+    <li><a href="/terms/">Terms</a></li>
+  </ul>
+</footer>

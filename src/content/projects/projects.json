@@ -1,0 +1,18 @@
+{
+  "hidden": [".claude", ".config", "README.md", "housingprofile", "wiki"],
+  "pinned": ["ACS6116-Rocket-Landing-MPC", "HITL", "grid_mpc", "haos_mpc", "FCT_Python", "aqualunar", "CityZen", "eyh-biobuild", "ACS233"],
+  "overrides": {
+    "ACS6116-Rocket-Landing-MPC": {"title": "Rocket landing", "summary": "A rocket, landed with model predictive control.", "method": "MPC"},
+    "HITL": {"title": "Bi-rotor helicopter", "summary": "A bi-rotor helicopter, controlled in hardware-in-the-loop.", "method": "HITL"},
+    "grid_mpc": {"title": "Grid control", "summary": "A grid, controlled with model predictive control.", "method": "MPC"},
+    "haos_mpc": {"title": "Model Predictive Control with Homeassistant", "method": "MPC"},
+    "FCT_Python": {"title": "Complex System Modelling of Alcohol-related Health Inequalities"},
+    "aqualunar": {"title": "Aqualunar Challenge"},
+    "CityZen": {"title": "CityZen"},
+    "eyh-biobuild": {"title": "BioBuild"},
+    "ACS233": {"title": "Burglar Alarm System"},
+    "predator-prey": {"title": "Predator-prey"},
+    "modelpredictivecontrol": {"title": "Model predictive control"},
+    "painpointminer": {"title": "Pain point miner"}
+  }
+}

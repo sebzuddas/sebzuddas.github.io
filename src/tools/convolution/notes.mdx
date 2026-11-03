@@ -1,0 +1,83 @@
+import Eq from '../../components/Eq.astro';
+
+## What convolution is
+
+Convolution combines two functions into a third. It answers a question that comes up all over engineering: if a system responds to a single kick in a known way, what does it do when kicked continuously by some input?
+
+The definition looks heavier than the idea:
+
+<Eq tex="y(t) = (f * g)(t) = \int_{-\infty}^{\infty} f(\tau)\, g(t - \tau)\, d\tau" />
+
+Read it as a recipe. Fix a time <Eq inline tex="t" />. Flip <Eq inline tex="g" /> backwards and slide it so it sits at <Eq inline tex="t" />. Multiply it point by point with <Eq inline tex="f" />. Add up the area of the result. That single number is the output at time <Eq inline tex="t" />, and repeating this for every <Eq inline tex="t" /> draws the whole output.
+
+That is what the plot shows. The top panel has <Eq inline tex="f" /> standing still, the flipped <Eq inline tex="g" /> sliding across it, and their product shaded. The bottom panel draws that area as it changes.
+
+Try this: press Play on [two equal rectangles](#fs=rect&fw=2.0&gs=rect&gw=2.0&p=-6.00). The overlap grows steadily, then shrinks, so the output is a triangle.
+
+## Why flip it?
+
+The flip is the part that puzzles most people. It exists because of the direction of time.
+
+Think of <Eq inline tex="g" /> as a memory of the past. The value of <Eq inline tex="g" /> at an age of 2 seconds says how much something that happened 2 seconds ago still counts now. To work out the output now, you look back along the input. The most recent input is matched with age zero, and older input with larger ages. Laid out against the input, that memory runs backwards.
+
+Try this: with [a slow decay as g](#fs=rect&fw=2.0&gs=exp&gw=1.0&p=1.00), notice that the tall edge of the flipped decay leads, on the side of the newest input. Drag along the plot to move it by hand.
+
+## The impulse response
+
+An impulse is a very short kick with an area of 1. Convolving anything with an impulse gives the same thing back, as if nothing had happened.
+
+Now suppose a system is linear, so double the input gives double the output, and time invariant, so it behaves the same today as yesterday. Any input can be thought of as a long row of tiny impulses, each scaled by the input at that moment. Each impulse sets off its own copy of the system's impulse response <Eq inline tex="h" />, and the output is the sum of all those copies:
+
+<Eq tex="y(t) = \int_{-\infty}^{\infty} u(\tau)\, h(t - \tau)\, d\tau" />
+
+This is the reason convolution matters. One curve, the impulse response, describes everything a linear system will ever do with any input.
+
+Try this: [an impulse as g](#fs=tri&fw=2.0&gs=impulse&p=6.00) returns <Eq inline tex="f" /> exactly. Then change <Eq inline tex="g" />'s shape and watch the output become a smeared version of <Eq inline tex="f" />.
+
+## Filters, blur and echo
+
+Once you see convolution, you see it everywhere.
+
+**A low-pass filter** in electronics is a resistor and capacitor, whose impulse response is a decaying exponential. Its output is a running average that weights recent input most. Try [a rectangle through an RC filter](#fs=rect&fw=2.0&gs=exp&gw=1.0&p=6.00): the sharp edges become smooth curves.
+
+**Blur** in an image is convolution with a small Gaussian: each pixel becomes a weighted average of its neighbours. Try [blurring a sharp step](#fs=step&gs=gauss&gw=0.5&p=6.00). The edge spreads out, which is exactly what an out-of-focus edge looks like.
+
+**Reverb** in audio is convolution of a dry recording with the impulse response of a room, which you can capture by firing a starting pistol in a cathedral.
+
+**Probability** uses it too. The distribution of the sum of two independent random numbers is the convolution of their distributions. This is why [two Gaussians](#fs=gauss&fw=0.8&gs=gauss&gw=0.8&p=6.00) give a wider Gaussian, and why adding many random things tends towards one.
+
+## Useful properties
+
+The order does not matter, so <Eq inline tex="f * g = g * f" />. Sliding <Eq inline tex="f" /> across <Eq inline tex="g" /> gives the same answer, as you can check by swapping the shapes.
+
+The areas multiply. The area under the output equals the area of <Eq inline tex="f" /> times the area of <Eq inline tex="g" />, which is why the tool shows all three.
+
+Widths add, roughly. The output of two rectangles lasts as long as both put together. Convolution almost always spreads things out, and very rarely sharpens them.
+
+Convolving with a step integrates. The output at any moment is the area of <Eq inline tex="f" /> so far, as [this step](#fs=rect&fw=2.0&gs=step&p=6.00) shows.
+
+## Convolution and frequency
+
+Convolution in time becomes plain multiplication in frequency:
+
+<Eq tex="Y(\omega) = F(\omega)\, G(\omega)" />
+
+This is the convolution theorem, and it is one of the most useful results in engineering. It explains why a filter is described by a frequency response: each frequency in the input is multiplied by the filter's gain at that frequency. A rectangle in time has a spectrum with a wide spread of frequencies, and the RC filter turns down the high ones, which is the smoothing you saw.
+
+It also makes convolution fast. Done directly, it takes a number of operations that grows with the square of the signal length. Using the fast Fourier transform, you transform both, multiply, and transform back, which is why long reverbs can run in real time.
+
+## Write your own
+
+Choose "Your formula" and write a function of `t`. You can use `+ - * / ^`, brackets, the constants `pi` and `e`, and `sin cos tan exp log sqrt abs sign min max`. Two extras are useful for building pulses: `step(t)` is 0 before time zero and 1 after, and `rect(t)` is 1 between -0.5 and 0.5.
+
+Try this: [a damped oscillation](#fs=formula&ff=exp(-t)*sin(5*t)*step(t)&gs=rect&gw=1.0&p=6.00) through a moving average, or [a pair of pulses](#fs=formula&ff=rect(t%2B2)%2Brect(t-2)&gs=gauss&gw=0.5&p=6.00), like two samples blurred together.
+
+## What this leaves out
+
+Everything here is continuous in name but computed on a grid of 0.02 s, as a sum. Edges are placed to the nearest grid point, so sharp results are accurate to about one step.
+
+The window runs from -6 to 6 s. Both functions are treated as zero outside it: shapes such as a step are cut off where the window ends, and a formula counts only inside it. A long decay can lose a very small amount of its tail for that reason.
+
+An impulse is drawn as a single tall spike with the area you set, and the plot is scaled to that area, not to the height of the spike. Real signals are usually discrete, where the integral becomes a sum, but the picture of flip, slide and add is the same.
+
+The test suite checks this tool against known results: two rectangles give a triangle, Gaussian variances add, the order does not change the answer, areas multiply, and an impulse leaves a function unchanged.

@@ -1,0 +1,12 @@
+---
+import Atom from './Atom.astro';
+import type { ToolMeta } from '../tools/types';
+
+const { tool } = Astro.props as { tool: ToolMeta };
+---
+<li><a class="row" href={`/resources/tools/${tool.slug}/`}>
+  <span class="n"><Atom /></span>
+  <h3>{tool.title}</h3>
+  <span class="tag">{tool.kind === 'simulation' ? 'Simulation' : 'Calculator'}</span>
+  <p>{tool.summary}</p>
+</a></li>

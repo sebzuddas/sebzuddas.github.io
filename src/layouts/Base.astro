@@ -1,0 +1,76 @@
+---
+import '../styles/global.css';
+import ChassisBar from '../components/ChassisBar.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../lib/site';
+import display from '@fontsource-variable/jost/files/jost-latin-wght-normal.woff2?url';
+import script from '@fontsource/yellowtail/files/yellowtail-latin-400-normal.woff2?url';
+import text from '@fontsource/libre-caslon-text/files/libre-caslon-text-latin-400-normal.woff2?url';
+import mono from '@fontsource/courier-prime/files/courier-prime-latin-400-normal.woff2?url';
+
+interface Props {
+  title?: string;
+  description?: string;
+  type?: 'website' | 'article';
+  /** Structured data for this page. */
+  schema?: object;
+}
+const { title, description = site.description, type = 'website', schema } = Astro.props;
+const fullTitle = title ? `${title} | ${site.name}` : `${site.name}: systems and control engineer`;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+const image = new URL('/assets/img/og.png', site.url).href;
+const dev = import.meta.env.DEV;
+---
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{fullTitle}</title>
+  {[display, script, text, mono].map((font) => <link rel="preload" href={font} as="font" type="font/woff2" crossorigin />)}
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <meta property="og:title" content={title ?? site.name} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content={type} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={image} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@sebzuddas" />
+  <link rel="icon" href="/assets/img/favicons/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png" />
+  <link rel="apple-touch-icon" href="/assets/img/favicons/apple-touch-icon.png" />
+  <link rel="alternate" type="application/rss+xml" title={site.name} href="/feed.xml" />
+  <script is:inline>
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem('theme'); } catch (e) {}
+      if (!t) t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      document.documentElement.dataset.theme = t;
+    })();
+  </script>
+  {dev && <script is:inline>{`
+    var f = new URLSearchParams(location.search).get('theme');
+    if (f) document.documentElement.dataset.theme = f;
+    addEventListener('keydown', function (e) {
+      if (e.altKey && e.code === 'KeyT') { var r = document.documentElement; r.dataset.theme = r.dataset.theme === 'light' ? 'dark' : 'light'; }
+    });
+  `}</script>}
+  {schema && <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />}
+  {!dev && <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${site.analyticsId}`}></script>}
+  {!dev && <script is:inline define:vars={{ id: site.analyticsId }}>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', id);
+  </script>}
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="page">
+    <ChassisBar />
+    <main id="main" style="display:grid;grid-template-columns:minmax(0,1fr);row-gap:var(--s-6)"><slot /></main>
+    <Footer />
+  </div>
+</body>
+</html>

@@ -1,0 +1,102 @@
+import Eq from '../../components/Eq.astro';
+
+## What a step response tells you
+
+Switch something on and hold it there: a heater, a motor, a voltage across a circuit. What the system does next is its step response, and it is the fastest way to learn how a system behaves. It shows how quickly the output moves, whether it overshoots, how long it rings, and where it finally settles.
+
+The dashed line at 1 is the input. The solid curve is the output, and the marker traces it out in time. Four numbers summarise the shape:
+
+- **Rise time:** how long the output takes to go from 10% to 90% of its final value.
+- **Overshoot:** how far it passes the final value, as a percentage.
+- **Peak time:** when that largest value happens.
+- **Settling time:** the moment it enters a band of 2% around the final value and stays there.
+
+Try this: [a slow, smooth first-order rise](#num=1&den=1%201), then [a lightly damped system that rings](#num=4&den=1%200.8%204).
+
+## Transfer functions
+
+A linear system can be written as a ratio of two polynomials in the complex variable <Eq inline tex="s" />:
+
+<Eq tex="G(s) = K\,\frac{b_m s^m + \dots + b_1 s + b_0}{a_n s^n + \dots + a_1 s + a_0}" />
+
+**The numerator and denominator are where the zeros and poles come from.** The roots of the numerator are the zeros, and the roots of the denominator are the poles. Change a coefficient and they move, and drag one on the S plane and the coefficients change to match.
+
+You type the coefficients, highest power first, separated by spaces. So `1 0.8 4` means `s² + 0.8s + 4`. A missing power is a zero, so `1 0 4` means `s² + 4`.
+
+The order is <Eq inline tex="n" />, the highest power in the denominator. It counts how many independent stores of energy the system has: a capacitor, a mass, a tank. The tool accepts orders up to 8, and asks that there are no more zeros than poles, because a system with more would need to respond to the future of its input.
+
+The final value of a stable system is <Eq inline tex="G(0)" />, which is the last numerator coefficient over the last denominator coefficient. Moving the gain <Eq inline tex="K" /> scales the whole response without changing its shape.
+
+Try this: [the same shape at a final value of 1](#num=4&den=1%200.8%204&k=1.0), then [at a gain of 3](#num=4&den=1%200.8%204&k=3.0).
+
+## Poles: what the system does by itself
+
+Poles are the roots of the denominator. Each one is a pattern of motion the system can follow with no input at all:
+
+<Eq tex="p = \sigma + j\omega \quad\Rightarrow\quad e^{pt} = e^{\sigma t}\left(\cos\omega t + j\sin\omega t\right)" />
+
+The real part <Eq inline tex="\sigma" /> sets growth or decay, so further left means faster decay. The imaginary part <Eq inline tex="\omega" /> sets how fast it oscillates, so further from the horizontal axis means a higher frequency. Complex poles come in mirror-image pairs, which is why two markers move together when you drag one.
+
+For a second-order system these become the two numbers engineers quote most: natural frequency and damping ratio.
+
+<Eq tex="G(s) = \frac{\omega_n^2}{s^2 + 2\zeta\omega_n s + \omega_n^2}" />
+
+The distance from the pole to the origin is <Eq inline tex="\omega_n" />. The damping ratio <Eq inline tex="\zeta" /> is the cosine of the angle the pole makes with the negative real axis. Overshoot depends only on <Eq inline tex="\zeta" />:
+
+<Eq tex="\text{Overshoot} = 100\,e^{-\pi\zeta/\sqrt{1-\zeta^2}}\ \%" />
+
+Try this: drag a pole on the S plane and watch the coefficients rewrite themselves. Compare [light damping](#num=4&den=1%200.8%204), [critical damping](#num=4&den=1%204%204) and [heavy damping](#num=4&den=1%208%204).
+
+## Zeros: how the input gets in
+
+Zeros are the roots of the numerator. They do not change what patterns the system can follow, only how strongly each one is excited. A zero placed close to a pole nearly cancels it, and that pole all but disappears from the response.
+
+A zero in the right half plane is different. It makes the output start off in the wrong direction before recovering. This is why steering a bicycle at speed starts with a small turn the other way, and why these systems are hard to control quickly: feedback cannot simply cancel it.
+
+Try this: [a right half plane zero](#num=-1%201&den=1%202%201) dips before it rises. [The same poles with the zero on the left](#num=1%201&den=1%202%201) go straight up.
+
+## Dominant poles and higher order
+
+A high-order system often behaves like a low-order one. Each pole's contribution decays at its own rate, so the poles nearest the imaginary axis last longest and shape what you see. Those are the dominant poles. A pole five times further left has usually finished before anyone notices it.
+
+This is why second-order intuition goes so far, and also where it fails: the approximation only holds when the other poles really are far away and no zeros are nearby.
+
+Try this: [three real poles at -1, -2 and -3](#num=6&den=1%206%2011%206) rise like a slow system with a delay. [A fourth-order Butterworth filter](#num=1&den=1%202.613%203.414%202.613%201) places its poles on a semicircle, for the flattest possible frequency response.
+
+## Stability
+
+A system is stable if every pole has a negative real part: every natural motion dies away. That is the shaded left half of the S plane. One pole in the right half plane is enough to make the output grow without limit, whatever the other poles do. A pole exactly on the imaginary axis is marginal, and rings or ramps forever.
+
+Try this: [poles just right of the axis](#num=1&den=1%20-0.2%201) grow, and the readouts go blank because there is no final value to settle at. [Move them onto the axis](#num=1&den=1%200%201) and the oscillation holds steady.
+
+## The Z plane: the same system, sampled
+
+Computers do not see continuous signals. They read the output and set the input every <Eq inline tex="T" /> seconds, holding the input steady between. The dots on the plot are those samples.
+
+Sampling turns the differential equation into a difference equation, with the variable <Eq inline tex="z" /> standing for one step forward in time. Each pole moves according to:
+
+<Eq tex="z = e^{pT}" />
+
+The whole left half of the S plane folds into the inside of the unit circle, and the imaginary axis wraps around the circle itself. So the stability rule becomes simple: every pole must lie inside the unit circle. A pole near <Eq inline tex="z = 1" /> is slow. A pole near the origin dies out in a few samples.
+
+The tool uses the zero-order-hold equivalent, which assumes the input is held constant across each sample. Its response matches the continuous one exactly at the sampling instants. Poles follow the rule above, but zeros do not. Discretising can even create zeros that the continuous system never had, which is why a system with no zeros in the S plane usually has some in the Z plane.
+
+Try this: move the sample period slider and watch the poles travel around the circle while the curve stays put. A long period such as [T = 1.5 s](#num=4&den=1%200.8%204&T=1.50) misses much of the ringing, and the poles swing far around the circle. That is the start of aliasing.
+
+## Seeing it in 3D
+
+Turn on the 3D surface to see the height of <Eq inline tex="|G|" /> over the plane. Each pole is a pole in the literal sense, holding the sheet up like a tent pole, and each zero pins it to the floor.
+
+The highlighted line is where the surface crosses the imaginary axis in the S plane and the unit circle in the Z plane. The height along that line is the frequency response: how much the system amplifies a sine wave at each frequency. A pole near the line lifts it into a resonant peak, which is the same thing as the ringing in the time plot.
+
+The surface is clipped at both ends so that poles and zeros stay on the plot, and the height uses a logarithmic scale. Drag to rotate it.
+
+Try this: [a resonant system in 3D](#num=4&den=1%200.4%204&v=1), then [a well damped one](#num=4&den=1%204%204&v=1), and compare the peaks along the ridge.
+
+## What this leaves out
+
+The model is linear and time invariant. Real systems saturate, have friction and delay, and change as they wear. Coefficients are shown to four significant figures after dragging, so a pole may shift very slightly when the formula is rewritten. Repeated poles are found less precisely than others, though the simulated response stays exact because it does not depend on finding them.
+
+Metrics need a stable system with a non-zero final value. Dragging works on the S plane only, because moving a Z plane zero has no simple meaning back in continuous time.
+
+The test suite checks this tool against closed-form solutions for first, second and third order systems, against repeated poles, and confirms that the discrete model reproduces the continuous response at every sample.
