@@ -25,8 +25,8 @@ add it to `movedToSubstack` in `src/lib/posts.ts`.
 
 Vercel builds and deploys every push to master. The `Checks` workflow runs the tests alongside, and
 triggers a daily rebuild through the `VERCEL_DEPLOY_HOOK` secret. Repos with a GitHub Pages site are
-served under this domain, such as `/grid_mpc/`, by rewrites in `vercel.json`. A new Pages repo needs a
-line there too, and the build warns when one is missing.
+served under this domain, such as `/grid_mpc/`, by rewrites in `vercel.json`. A new Pages repo needs two
+lines there too, and the build warns when one is missing.
 
 Design rules and the hero's frozen specification are in `docs/plans/IMPLEMENTATION-REQUIREMENTS.md`.
 
