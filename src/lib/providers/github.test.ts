@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { allowsEmbedding, cleanReadme, compileReadme, isListed, mirrorsReadme, pagesUrl, siteUrl, titleOf, unproxied } from './github';
+import { allowsEmbedding, cleanReadme, compileReadme, isListed, linkFor, mirrorsReadme, pagesUrl, siteUrl, titleOf, unproxied } from './github';
 
 const repo = { name: 'demo', html_url: 'https://github.com/sebzuddas/demo', default_branch: 'main' };
 
@@ -98,6 +98,20 @@ describe('compileReadme', () => {
   });
 });
 
+describe('linkFor', () => {
+  const pages = { name: 'demo', homepage: null, has_pages: true };
+  const found = { site: 'https://sebzuddas.com/demo/', embed: true };
+
+  it('links a demo on this domain when it has a rewrite, and at github.io when it does not', () => {
+    expect(linkFor(pages, found, ['/demo/:path*'])).toEqual(found);
+    expect(linkFor(pages, found, [])).toEqual({ ...found, site: 'https://sebzuddas.github.io/demo/' });
+  });
+
+  it('links nothing when the site is a copy of the README', () => {
+    expect(linkFor(pages, { ...found, embed: false, copy: true }, ['/demo/:path*'])).toBeUndefined();
+  });
+});
+
 describe('isListed', () => {
   const repo = { name: 'demo', fork: false, archived: false };
   it('lists an ordinary repo', () => expect(isListed(repo)).toBe(true));
@@ -106,6 +120,7 @@ describe('isListed', () => {
     expect(isListed({ ...repo, fork: true })).toBe(false);
   });
   it('drops repos hidden by hand', () => expect(isListed({ ...repo, name: 'housingprofile' })).toBe(false));
+  it('drops the repo for this site', () => expect(isListed({ ...repo, name: 'sebzuddas.github.io' })).toBe(false));
 });
 
 describe('titleOf', () => {

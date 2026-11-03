@@ -416,12 +416,12 @@ test('projects come from GitHub, embedding a site or linking to it', async ({ pa
   await page.goto('/projects/predator-prey/');
   await expect(page.locator('.project-embed iframe')).toHaveAttribute('src', 'https://sebzuddas.com/predator-prey/');
   await expect(page.locator('.readme')).not.toBeEmpty();
-  await page.goto('/projects/cityzen/');
-  await expect(page.locator('.project-embed iframe')).toHaveCount(0);
-  await expect(page.locator('.project-links a').first()).toHaveAttribute('href', 'https://sebzuddas.com/CityZen/');
+  await expect(page.locator('main a[href="/projects/sebzuddas.github.io/"]')).toHaveCount(0);
+  // HITL's Pages site is GitHub's copy of its README, which the page already shows.
   await page.goto('/projects/hitl/');
   await expect(page.locator('.project-embed iframe')).toHaveCount(0);
-  await expect(page.locator('.project-links a').first()).toHaveAttribute('href', 'https://sebzuddas.com/HITL/');
+  await expect(page.locator('.project-links a')).toHaveCount(1);
+  await expect(page.locator('.project-links a')).toHaveAttribute('href', 'https://github.com/sebzuddas/HITL');
   await page.goto('/projects/exercism/');
   await expect(page.locator('.project-embed iframe')).toHaveCount(0);
   await expect(page.locator('.project-links a').first()).toHaveAttribute('href', /exercism\.org/);

@@ -160,21 +160,28 @@ async function readme(repo: Repo): Promise<string | undefined> {
   return response.text();
 }
 
-async function probe(url: string, readmeHtml: string): Promise<{ site: string; embed: boolean } | undefined> {
+async function probe(url: string, readmeHtml: string): Promise<Found | undefined> {
   try {
     const response = await fetch(url, { signal: AbortSignal.timeout(10_000), headers: { 'user-agent': 'sebzuddas.com build' } });
     if (!response.ok) return undefined;
-    const embed = allowsEmbedding(response.headers) && !mirrorsReadme(await response.text(), readmeHtml);
-    return { site: response.url, embed };
+    const copy = mirrorsReadme(await response.text(), readmeHtml);
+    return { site: response.url, embed: allowsEmbedding(response.headers) && !copy, copy };
   } catch {
     return undefined;
   }
 }
 
+/** A site found at build time. A copy is GitHub Pages rendering the README, not a demo. */
+interface Found {
+  site: string;
+  embed: boolean;
+  copy?: boolean;
+}
+
 interface Fetched {
   repo: Repo;
   rendered?: string;
-  found?: { site: string; embed: boolean };
+  found?: Found;
 }
 
 async function fetchRepos(): Promise<Fetched[]> {
@@ -193,24 +200,39 @@ async function fetchRepos(): Promise<Fetched[]> {
 
 /** Forks and archived repos stay off the site. A deleted repo goes by itself, because it stops being read. */
 export function isListed(repo: Pick<Repo, 'name' | 'fork' | 'archived'>): boolean {
-  return !repo.fork && !repo.archived && !config.hidden.includes(repo.name);
+  // The repo for this site would list the site on itself.
+  return !repo.fork && !repo.archived && repo.name !== `${OWNER}.github.io` && !config.hidden.includes(repo.name);
 }
 
-function warnUnproxied(fetched: Fetched[]) {
-  const { rewrites } = JSON.parse(readFileSync('vercel.json', 'utf8')) as { rewrites: { source: string }[] };
-  const missing = unproxied(fetched.filter(({ repo }) => isListed(repo)).map(({ repo }) => repo), rewrites.map((rule) => rule.source));
-  if (missing.length) console.warn(`These Pages sites need a rewrite in vercel.json, or they 404: ${missing.join(', ')}`);
+/**
+ * Which site a project page links, if any. A copy of the README links nothing, as the page
+ * already shows the README. A Pages site with no rewrite on this domain links github.io.
+ */
+export function linkFor(repo: Pick<Repo, 'name' | 'homepage' | 'has_pages'>, found: Found | undefined, sources: string[]): Found | undefined {
+  if (!found || found.copy) return undefined;
+  return unproxied([repo], sources).length ? { ...found, site: pagesUrl(found.site) } : found;
+}
+
+/** Fixes only the repo's owner can make. In GitHub Actions they show on the run summary. */
+function report(listed: Fetched[], sources: string[]) {
+  const warn = (message: string) => console.warn(process.env.GITHUB_ACTIONS ? `::warning::${message}` : message);
+  const copies = listed.filter(({ found }) => found?.copy).map(({ repo }) => repo.name);
+  if (copies.length) warn(`GitHub Pages is serving the README, not a demo, for ${copies.join(', ')}. If the repo has a demo, set Settings > Pages > Source to GitHub Actions.`);
+  const missing = unproxied(listed.filter(({ found }) => found && !found.copy).map(({ repo }) => repo), sources);
+  if (missing.length) warn(`No rewrite in vercel.json for ${missing.join(', ')}, so they are linked at github.io.`);
 }
 
 function toProjects(fetched: Fetched[]): Project[] {
-  warnUnproxied(fetched);
+  const sources = (JSON.parse(readFileSync('vercel.json', 'utf8')) as { rewrites: { source: string }[] }).rewrites.map((rule) => rule.source);
   const overrides: Record<string, Partial<Project>> = config.overrides;
   const { pinned } = config;
   const listed = fetched.filter(({ repo }) => isListed(repo)).sort((a, b) => b.repo.pushed_at.localeCompare(a.repo.pushed_at));
+  report(listed, sources);
   return listed.map(({ repo, rendered, found }, order): Project => {
     const body = rendered && compileReadme(cleanReadme(rendered, repo));
     const poster = body ? formatReadme(body, repo.html_url) : undefined;
     const id = repo.name.toLowerCase();
+    const link = linkFor(repo, found, sources);
     return {
       id,
       title: titleOf(repo.name, rendered),
@@ -222,8 +244,8 @@ function toProjects(fetched: Fetched[]): Project[] {
       repo: repo.html_url,
       readme: poster?.html,
       stats: poster?.stats,
-      site: found?.site,
-      embed: found?.embed ?? false,
+      site: link?.site,
+      embed: link?.embed ?? false,
       pushed: repo.pushed_at,
       ...overrides[repo.name],
     };
