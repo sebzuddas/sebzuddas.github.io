@@ -15,6 +15,10 @@
       "destination": "https://sebzuddas.github.io/aqualunar/:path*"
     },
     {
+      "source": "/axiometa-digital-twin/:path*",
+      "destination": "https://sebzuddas.github.io/axiometa-digital-twin/:path*"
+    },
+    {
       "source": "/CityZen/:path*",
       "destination": "https://sebzuddas.github.io/CityZen/:path*"
     },
