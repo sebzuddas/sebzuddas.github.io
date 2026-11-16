@@ -44,8 +44,10 @@ export function siteUrl(repo: Pick<Repo, 'name' | 'homepage' | 'has_pages'>): st
   if (repo.homepage?.trim()) {
     const url = new URL(repo.homepage.trim());
     url.protocol = 'https:';
-    if (url.hostname === `${OWNER}.github.io`) url.hostname = DOMAIN;
-    return url.href;
+    if (url.hostname === `${OWNER}.github.io` || url.hostname === `www.${DOMAIN}`) url.hostname = DOMAIN;
+    // A homepage pointing elsewhere on this site, such as /projects/, is not the repo's own site.
+    const own = url.pathname === '/' || url.pathname.split('/')[1].toLowerCase() === repo.name.toLowerCase();
+    if (url.hostname !== DOMAIN || own) return url.href;
   }
   return repo.has_pages ? `https://${DOMAIN}/${repo.name}/` : undefined;
 }
