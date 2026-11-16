@@ -2,6 +2,12 @@ import fs from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
 import { regions } from '../src/tools/step-response/model';
 
+/** Project sites are served by rewrites in vercel.json, which only exist once deployed. */
+const rewritten = (JSON.parse(fs.readFileSync('vercel.json', 'utf8')) as { rewrites: { source: string }[] }).rewrites
+  .map((rule) => rule.source.split('/')[1]);
+const standInForRewrites = (page: Page) =>
+  page.route((url) => rewritten.includes(url.pathname.split('/')[1]), (route) => route.fulfill({ contentType: 'text/html', body: '<!doctype html><title>Project site</title>' }));
+
 const choose = async (page: Page, option: string) => {
   await page.locator('.dropdown button').click();
   await page.getByRole('option', { name: option }).click();
@@ -558,6 +564,7 @@ test('no console errors on any route', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   page.on('console', (m) => { if (m.type() === 'error' && m.location().url.includes('localhost')) errors.push(m.text()); });
+  await standInForRewrites(page);
   for (const route of routes) await page.goto(route);
   expect(errors).toEqual([]);
 });
