@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import LaunchLink from '../../components/LaunchLink.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { sunburst, titleClass } from '../../lib/providers/poster';
+import { pagesUrl } from '../../lib/providers/github';
 import 'katex/dist/katex.min.css';
 
 export async function getStaticPaths() {
@@ -11,7 +12,9 @@ export async function getStaticPaths() {
 }
 
 const { project } = Astro.props as { project: CollectionEntry<'projects'> };
-const { title, summary, method, pushed, site, embed, repo, readme, stats } = project.data;
+const { title, summary, method, pushed, embed, repo, readme, stats } = project.data;
+// The rewrites that serve project sites on this domain only exist once deployed, so the dev server uses GitHub Pages.
+const site = project.data.site && (import.meta.env.DEV ? pagesUrl(project.data.site) : project.data.site);
 const rays = sunburst(project.id);
 const updated = pushed && new Date(pushed).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
 const spec = [
