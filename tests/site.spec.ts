@@ -415,7 +415,7 @@ test('projects come from GitHub, embedding a site or linking to it', async ({ pa
   await expect(page.locator('main a[href="/projects/housingprofile/"]')).toHaveCount(0);
   await expect(page.locator('main a[href="/projects/wildnature-rop/"]')).toHaveCount(0);
   await page.goto('/projects/predator-prey/');
-  await expect(page.locator('.project-embed iframe')).toHaveAttribute('src', 'https://sebzuddas.com/predator-prey/');
+  await expect(page.locator('.project-embed iframe')).toHaveAttribute('src', '/predator-prey/');
   await expect(page.locator('.readme')).not.toBeEmpty();
   await expect(page.locator('main a[href="/projects/sebzuddas.github.io/"]')).toHaveCount(0);
   // CityZen's Pages site is GitHub's copy of its README, which the page already shows.
