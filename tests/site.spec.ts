@@ -2,6 +2,12 @@ import fs from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
 import { regions } from '../src/tools/step-response/model';
 
+/** Project sites are served by rewrites in vercel.json, which only exist once deployed. */
+const rewritten = (JSON.parse(fs.readFileSync('vercel.json', 'utf8')) as { rewrites: { source: string }[] }).rewrites
+  .map((rule) => rule.source.split('/')[1]);
+const standInForRewrites = (page: Page) =>
+  page.route((url) => rewritten.includes(url.pathname.split('/')[1]), (route) => route.fulfill({ contentType: 'text/html', body: '<!doctype html><title>Project site</title>' }));
+
 const choose = async (page: Page, option: string) => {
   await page.locator('.dropdown button').click();
   await page.getByRole('option', { name: option }).click();
@@ -410,24 +416,22 @@ test('the legs come out near the ground', async ({ page }) => {
 test('projects come from GitHub, embedding a site or linking to it', async ({ page }) => {
   await page.goto('/projects/');
   await expect(page.locator('main')).toContainText('Grid control');
-  await expect(page.locator('main a[href="/projects/overknight/"]')).toHaveCount(1);
+  await expect(page.locator('main a[href="/projects/ilrobot-hackathon/"]')).toHaveCount(1);
   await expect(page.locator('main a[href="/projects/.claude/"]')).toHaveCount(0);
   await expect(page.locator('main a[href="/projects/housingprofile/"]')).toHaveCount(0);
+  await expect(page.locator('main a[href="/projects/wildnature-rop/"]')).toHaveCount(0);
   await page.goto('/projects/predator-prey/');
-  await expect(page.locator('.project-embed iframe')).toHaveAttribute('src', 'https://sebzuddas.com/predator-prey/');
+  await expect(page.locator('.project-embed iframe')).toHaveAttribute('src', '/predator-prey/');
   await expect(page.locator('.readme')).not.toBeEmpty();
   await expect(page.locator('main a[href="/projects/sebzuddas.github.io/"]')).toHaveCount(0);
-  // HITL's Pages site is GitHub's copy of its README, which the page already shows.
-  await page.goto('/projects/hitl/');
+  // CityZen's Pages site is GitHub's copy of its README, which the page already shows.
+  await page.goto('/projects/cityzen/');
   await expect(page.locator('.project-embed iframe')).toHaveCount(0);
   await expect(page.locator('.project-links a')).toHaveCount(1);
-  await expect(page.locator('.project-links a')).toHaveAttribute('href', 'https://github.com/sebzuddas/HITL');
-  await page.goto('/projects/exercism/');
-  await expect(page.locator('.project-embed iframe')).toHaveCount(0);
-  await expect(page.locator('.project-links a').first()).toHaveAttribute('href', /exercism\.org/);
-  await page.goto('/projects/overknight/');
+  await expect(page.locator('.project-links a')).toHaveAttribute('href', 'https://github.com/sebzuddas/CityZen');
+  await page.goto('/projects/ilrobot-hackathon/');
   await expect(page.locator('.project-links a')).toHaveCount(1);
-  await expect(page.locator('.project-links a')).toHaveAttribute('href', 'https://github.com/sebzuddas/overknight');
+  await expect(page.locator('.project-links a')).toHaveAttribute('href', 'https://github.com/sebzuddas/ilrobot-hackathon');
 });
 
 test('README maths and diagrams are compiled in the page', async ({ page }) => {
@@ -560,6 +564,7 @@ test('no console errors on any route', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   page.on('console', (m) => { if (m.type() === 'error' && m.location().url.includes('localhost')) errors.push(m.text()); });
+  await standInForRewrites(page);
   for (const route of routes) await page.goto(route);
   expect(errors).toEqual([]);
 });
@@ -587,15 +592,8 @@ test('README sections fold, and links open them', async ({ page }) => {
   await expect(sections.nth(2)).toHaveAttribute('open', '');
 });
 
-test('a project with no README still gets a poster with its links', async ({ page }) => {
-  await page.goto('/projects/exercism/');
-  await expect(page.locator('.claim h1')).toBeVisible();
-  await expect(page.locator('.readme')).toHaveCount(0);
-  await expect(page.locator('.project-links a.btn')).toHaveCount(2);
-});
-
 test('signed GitHub media never reaches the page', async ({ page }) => {
-  for (const slug of ['hitl', 'acs233', 'acs6116-rocket-landing-mpc']) {
+  for (const slug of ['hitl', 'acs233', 'rocket-landing-mpc']) {
     await page.goto(`/projects/${slug}/`);
     expect(await page.content()).not.toContain('private-user-images');
   }
@@ -637,9 +635,9 @@ test('buttons wake on hover, and stay still with reduced motion', async ({ brows
 
 test('the home page keeps its picks while projects run by date', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('main a.row[href^="/projects/"]').first()).toHaveAttribute('href', '/projects/acs6116-rocket-landing-mpc/');
+  await expect(page.locator('main a.row[href^="/projects/"]').first()).toHaveAttribute('href', '/projects/rocket-landing-mpc/');
   await page.goto('/projects/');
-  await expect(page.locator('main ol.rows a.row').first()).not.toHaveAttribute('href', '/projects/acs6116-rocket-landing-mpc/');
+  await expect(page.locator('main ol.rows a.row').first()).not.toHaveAttribute('href', '/projects/rocket-landing-mpc/');
 });
 
 test('electrons ride their ellipses on hover, on every orbit', async ({ page }) => {

@@ -66,6 +66,6 @@ export const meta: ToolMeta = {
   references: [
     { label: 'L. Blackmore, Autonomous Precision Landing of Space Rockets, The Bridge, 2016', url: 'https://www.nae.edu/File.aspx?id=168977' },
     { label: 'J. B. Rawlings, D. Q. Mayne and M. Diehl, Model Predictive Control: Theory, Computation, and Design' },
-    { label: 'Rocket landing with MPC, the project behind this', url: '/projects/acs6116-rocket-landing-mpc/' },
+    { label: 'Rocket landing with MPC, the project behind this', url: '/projects/rocket-landing-mpc/' },
   ],
 };

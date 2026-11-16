@@ -1,6 +1,18 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/ACS6116-Rocket-Landing-MPC/:path*",
+      "destination": "/Rocket-Landing-MPC/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/projects/acs6116-rocket-landing-mpc/",
+      "destination": "/projects/rocket-landing-mpc/",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/ACS233/",
@@ -9,14 +21,6 @@
     {
       "source": "/ACS233/:path*",
       "destination": "https://sebzuddas.github.io/ACS233/:path*"
-    },
-    {
-      "source": "/ACS6116-Rocket-Landing-MPC/",
-      "destination": "https://sebzuddas.github.io/ACS6116-Rocket-Landing-MPC/"
-    },
-    {
-      "source": "/ACS6116-Rocket-Landing-MPC/:path*",
-      "destination": "https://sebzuddas.github.io/ACS6116-Rocket-Landing-MPC/:path*"
     },
     {
       "source": "/aqualunar/",
@@ -107,12 +111,36 @@
       "destination": "https://sebzuddas.github.io/housingprofile/:path*"
     },
     {
+      "source": "/LDTH-Drone-Stability-Challenge/",
+      "destination": "https://sebzuddas.github.io/LDTH-Drone-Stability-Challenge/"
+    },
+    {
+      "source": "/LDTH-Drone-Stability-Challenge/:path*",
+      "destination": "https://sebzuddas.github.io/LDTH-Drone-Stability-Challenge/:path*"
+    },
+    {
       "source": "/predator-prey/",
       "destination": "https://sebzuddas.github.io/predator-prey/"
     },
     {
       "source": "/predator-prey/:path*",
       "destination": "https://sebzuddas.github.io/predator-prey/:path*"
+    },
+    {
+      "source": "/Rocket-Landing-MPC/",
+      "destination": "https://sebzuddas.github.io/Rocket-Landing-MPC/"
+    },
+    {
+      "source": "/Rocket-Landing-MPC/:path*",
+      "destination": "https://sebzuddas.github.io/Rocket-Landing-MPC/:path*"
+    },
+    {
+      "source": "/tikzmcp/",
+      "destination": "https://sebzuddas.github.io/tikzmcp/"
+    },
+    {
+      "source": "/tikzmcp/:path*",
+      "destination": "https://sebzuddas.github.io/tikzmcp/:path*"
     }
   ]
 }

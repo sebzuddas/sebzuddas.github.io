@@ -11,6 +11,9 @@ describe('siteUrl', () => {
   it('finds a Pages site with no homepage set, and reports no site otherwise', () => {
     expect(siteUrl({ name: 'x', homepage: null, has_pages: true })).toBe('https://sebzuddas.com/x/');
     expect(siteUrl({ name: 'x', homepage: '', has_pages: false })).toBeUndefined();
+    expect(siteUrl({ name: 'x', homepage: 'https://sebzuddas.com/projects/', has_pages: true })).toBe('https://sebzuddas.com/x/');
+    expect(siteUrl({ name: 'x', homepage: 'https://sebzuddas.com/projects/', has_pages: false })).toBeUndefined();
+    expect(siteUrl({ name: 'x', homepage: 'https://www.sebzuddas.com/projects', has_pages: true })).toBe('https://sebzuddas.com/x/');
   });
 });
 
